@@ -42,7 +42,11 @@ Route::middleware(['auth', CheckClientMiddleware::class])->group(function () {
         Route::put('/client/colis/update/{id}', [ColiController::class, 'update'])->name('colis.update');
         Route::delete('/client/colis/{id}', [ColiController::class, 'destroy'])->name('colis.destroy');
         // End Route Coli ::::::::::::::::::::::::::::::::
-
+        
+        /// Stock Link ::::::::::::::::::::::::::
+        Route::get('/stock/liste', [ProduitController::class, 'index'])->name('clients.produit.index');
+        Route::get('/stock/create', [ProduitController::class, 'create'])->name('clients.produit.create');
+        // End Route Store ::::::::::::::::::::::::::::::::
         // Route Bon_Ramassage :::::::::::::::::
         Route::get('/bon/ramassage', [Bon_ramassageController::class, 'index'])->name('bon_ramassage.index');
         Route::get('/bon/ramassage/create', [Bon_ramassageController::class, 'create'])->name('bon_ramassage.create');

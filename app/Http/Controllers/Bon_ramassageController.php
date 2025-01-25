@@ -78,7 +78,6 @@ class Bon_ramassageController extends Controller
                 $coli->save();
             }
         }
-
         return response()->json([
             'message' => 'Data received successfully!',
             'colis' => $bonRamassage,

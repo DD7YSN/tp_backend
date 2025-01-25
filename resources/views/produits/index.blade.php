@@ -4,9 +4,10 @@
 
 @section('content')
 <div class="home">
-    @include('layouts.sideBarAdmin')
-    
-    <div class="main">
+      @include('layouts.sideBar')
+
+      <div class="main">
+        @include('layouts.nav')
         <div class="card right-side">
             <div class="card-body">
                 <div class="mb-3 d-flex justify-content-between align-items-center">

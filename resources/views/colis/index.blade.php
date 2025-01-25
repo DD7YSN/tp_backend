@@ -4,10 +4,12 @@
 
 @section('content')
 <div class="home">
-  @include('layouts.sideBarClient')
+  @include('layouts.sideBar')
 
   <div class="main">
-    <div id="ajouterColi" class="card-body mx-4">
+    @include('layouts.nav')
+
+    <div id="ajouterColi" class="card-body mx-lg-5 p-3">
       <div class="mb-3 d-flex justify-content-between align-items-center">
         <h4 class="card-title mb-0">Liste des Colis</h4>
         <a href="{{route('colis.create')}}" class="btn btn-success mb-0">Ajouter</a>

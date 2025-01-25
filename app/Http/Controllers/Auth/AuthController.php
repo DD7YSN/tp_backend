@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use Log;
-use App\Models\Role;
+use session;
 use Exception;
+use App\Models\Role;
 use App\Models\Utilisateur;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -70,10 +71,10 @@ class AuthController extends Controller
         ]);
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        session()->forget('user');
+        $request->session()->forget('user');
         Auth::logout();
-        return redirect()->route('login')->with('success', 'Logged out successfully.');
+        return redirect()->route('login');
     }
 }

@@ -4,8 +4,10 @@
 
 @section('content')
 <div class="home">
-    @include('layouts.sideBarAdmin')
-    <div class="main">
+      @include('layouts.sideBar')
+
+      <div class="main">
+        @include('layouts.nav')
         <div class="card right-side">
             <div class="card-body p-4">
 
@@ -86,6 +88,8 @@
                 </>
             </div>
         </div>
+    </div>
+</div>
 
 
         <script>

@@ -7,6 +7,7 @@
     @include('layouts.sideBarAdmin')
 
     <div class="main">
+        
         <div class="card right-side">
             <div class="card-body">
                 <div class="mb-3 d-flex justify-content-between align-items-center">

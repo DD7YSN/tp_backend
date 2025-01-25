@@ -74,11 +74,12 @@ body {
     color: #635bff !important;
 }
 .home .main {
-    width: calc(100% - 300px);
+    /* width: calc(100% - 300px); */
+    /* padding-top: 35px; */
+    width: 100%;
     border-radius: 15px !important;
     background-color: #f4f7fb !important;
     min-height: 100vh;
-    padding-top: 35px;
 }
 .home .main .right-side{
     width: 95%;
@@ -135,7 +136,7 @@ body {
     }
     .home {
         width: 100%;
-        flex-direction: column;
+        /* flex-direction: column; */
     }
     .home .sidebar {
         position: absolute;

@@ -4,7 +4,12 @@
 
 @section('content')
 <div class="home">
-    @include('layouts.sideBarAdmin')
+    {{-- @include('layouts.sideBarAdmin') --}}
+    @include('layouts.sideBar')
+    <div class="main">
+    @include('layouts.nav')
+
+    </div>
 
 </div>
 @endsection

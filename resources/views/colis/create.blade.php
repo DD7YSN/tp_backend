@@ -1,19 +1,14 @@
-<style>
-  #ajouterColi{
-    width: 90% !important;
-    margin: 0 auto;
-  }
-</style>
 @extends('layouts.master')
 
 @section('title', 'Client | Livraison')
 
 @section('content')
 <div class="home">
-    @include('layouts.sideBarClient')
+      @include('layouts.sideBar')
 
       <div class="main">
-        <div id="ajouterColi" class="card-body">
+          @include('layouts.nav')
+            <div id="ajouterColi" class="card-body p-3">
                 <h4 class="card-title mb-3 text-center">Nouveau colis</h4>
                 <span>Rotour List colis</span>
                 <form class="mt-2" action="{{route('colis.store')}}" method="POST">
@@ -178,9 +173,9 @@
                     </div>
                 </form>
             </div>        
-        </div>
-    </div>
+    </div>        
 </div>
+
 
     <script>
         const slc_ville = document.getElementById('slc-ville');

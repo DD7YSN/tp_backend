@@ -4,8 +4,11 @@
 
 @section('content')
 <div class="home">
-  @include('layouts.sideBarClient')
+  @include('layouts.sideBar')
+
   <div class="main">
+    @include('layouts.nav')
+
     <div class="card-body p-3">
       <div class="mb-3 d-flex justify-content-between align-items-center">
         <span id="btn-enregistrer" class="ms-auto btn btn-success mb-0">enregistrer</span>
@@ -144,6 +147,7 @@
     enregistrer.addEventListener('click', () => {
       const checkboxes = document.querySelectorAll('tbody tr td .coli-checked');
       const colis = [];
+      const villeRamasse = document.getElementById();
 
       checkboxes.forEach(checkbox => {
         if (checkbox.checked) {
@@ -156,22 +160,22 @@
       });
 
       console.log(colis);
-      fetch(`/client/bon/ramassage/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': '{{ csrf_token() }}',
-        },
-        body: JSON.stringify({
-          'colis': colis
-        })
-      }).then(response => response.json())
-        .then(data => {
-          console.log('Success:', data);
-        })
-        .catch((error) => {
-          console.error('Error:', error)
-        })
-        })
+      // fetch(`/client/bon/ramassage/`, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'X-CSRF-TOKEN': '{{ csrf_token() }}',
+      //   },
+      //   body: JSON.stringify({
+      //     'colis': colis
+      //   })
+      // }).then(response => response.json())
+      //   .then(data => {
+      //     console.log('Success:', data);
+      //   })
+      //   .catch((error) => {
+      //     console.error('Error:', error)
+      //   })
+    })
   </script>
   @endsection
