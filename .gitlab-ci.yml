@@ -10,11 +10,11 @@ install-job:
     - name: mysql:5.7
       alias: db
   before_script:
-    - apt-get update && apt-get install -y unzip git libpng-dev libjpeg-dev libfreetype6-dev
-    - docker-php-ext-configure gd --with-freetype --with-jpeg
-    - docker-php-ext-install gd
-    - curl -sS https://getcomposer.org/installer | php
-    - mv composer.phar /usr/local/bin/composer
+  - apt-get update && apt-get install -y unzip git libpng-dev libjpeg-dev libfreetype6-dev
+  - docker-php-ext-configure gd --with-freetype --with-jpeg
+  - docker-php-ext-install gd
+  - curl -sS https://getcomposer.org/installer | php
+  - mv composer.phar /usr/local/bin/composer
   script:
     - composer install --no-interaction --prefer-dist
 
