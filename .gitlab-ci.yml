@@ -41,7 +41,7 @@ deploy:
   stage: deploy
   script:
     - echo "Deploying Laravel project"
-    - rsync -avz --exclude 'node_modules/' --exclude '.git/' ./ user@yourserver:/path/to/your/project
-    - ssh user@yourserver 'cd /path/to/your/project && php artisan migrate --force && php artisan config:cache && php artisan route:cache'
+    - rsync -avz --exclude 'node_modules/' --exclude '.git/' ./ gitlab.com/dd7_ysn/livraison
+    - ssh git@gitlab.com:dd7_ysn/livraison.git && php artisan migrate --force && php artisan config:cache && php artisan route:cache'
   only:
     - main
