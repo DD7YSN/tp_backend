@@ -21,7 +21,9 @@ install_dependencies:
   stage: install
   image: php:8.1-fpm
   script:
-    - composer install
+    # Install Composer if it's not installed
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+    - composer install --no-interaction --prefer-dist
     - npm install
     - npm run dev
   only:
