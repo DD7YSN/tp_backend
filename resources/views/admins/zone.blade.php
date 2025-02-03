@@ -15,6 +15,7 @@
         background-color: #FFF;
         transition: 1s;
         visibility: hidden;
+        z-index: 9;
     }
 
     .showForm {
