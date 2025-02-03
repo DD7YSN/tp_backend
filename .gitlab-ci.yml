@@ -26,15 +26,14 @@ before_script:
 
 install_dependencies:
   stage: install
-  image: php:8.2-fpm
+  image: php:8.2-fpm  # Or your desired PHP version
   script:
-    # Install Composer if it's not installed
+    # Install Composer if not already installed
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
     - composer install --no-interaction --prefer-dist
+    # Install npm dependencies
     - npm install
     - npm run dev
-  only:
-    - main
 
 test:
   stage: test
