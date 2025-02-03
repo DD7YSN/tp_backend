@@ -12,8 +12,15 @@ variables:
   DB_PASSWORD: ""
 
 before_script:
+  # Update package lists and install Git and other necessary dependencies
   - apt-get update -y
-  - apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev
+  - apt-get install -y git libpng-dev libjpeg-dev libfreetype6-dev zip unzip
+  # Install the necessary PHP extensions
+  - docker-php-ext-configure gd --with-freetype --with-jpeg
+  - docker-php-ext-install gd  # Update package lists and install Git and other necessary dependencies
+  - apt-get update -y
+  - apt-get install -y git libpng-dev libjpeg-dev libfreetype6-dev zip unzip
+  # Install the necessary PHP extensions
   - docker-php-ext-configure gd --with-freetype --with-jpeg
   - docker-php-ext-install gd
 
