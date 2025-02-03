@@ -4,9 +4,8 @@
 
 @section('content')
 <div class="home">
-    {{-- @include('layouts.sideBarAdmin') --}}
-    @include('layouts.sideBar')
-    <div class="main">
+    @include('layouts.sideBarAdmin')
+    <div class="main pb-5">
     @include('layouts.nav')
 
     </div>

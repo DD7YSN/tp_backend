@@ -11,4 +11,10 @@ class Business extends Model
     function client(){
         return $this->hasOne(Client::class, 'id');
     }
+    function coli(){
+        return $this->hasMany(Coli::class, 'id_business');
+    }
+    function produit(){
+        return $this->hasMany(Produit::class, 'id_business');
+    }
 }

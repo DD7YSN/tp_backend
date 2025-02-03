@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdn.lineicons.com/2.0/LineIcons.css">
         <!-- Importing Boxicons CSS -->
     <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
 
     <link href="{{ asset('css/global_styles.css') }}" rel="stylesheet">

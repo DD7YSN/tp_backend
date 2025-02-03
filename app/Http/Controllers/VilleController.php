@@ -82,9 +82,9 @@ class VilleController extends Controller
     {
         try{
             $request->validate([
-                'nom_ville' => 'required|string|max:30, nom_ville,'.$id,
+                'nom_ville' => 'required|string|max:30|unique:villes,nom_ville,' . $id,
                 'id_zone' => 'required|exists:zones,id',
-                'ref' => 'required|string|max:10|unique:villes,ref',
+                'ref' => 'required|string|max:10|unique:villes,ref,' . $id,
                 'frais_livraison' => 'required|numeric|min:0',
                 'frais_retour' => 'required|numeric|min:0',
                 'frais_refus' => 'required|numeric|min:0',

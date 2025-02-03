@@ -6,8 +6,10 @@
 <div class="home">
     @include('layouts.sideBarAdmin')
 
-    <div class="main">
-        <div class="card">
+    <div class="main pd-5">
+    @include('layouts.nav')
+
+        <div class="card mx-lg-3 mt-5">
             <div class="card-body">
               <h4 class="card-title mb-3">Information General</h4>
               <form id="globalForm" action="{{route('general.update', $general->id)}}" method="POST">

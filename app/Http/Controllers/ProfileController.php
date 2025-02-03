@@ -2,22 +2,26 @@
 
 namespace App\Http\Controllers;
 
-
-use App\Models\Utilisateur;
-use App\Models\Client;
-
 use Illuminate\Http\Request;
-
-class ClientController extends Controller
+use App\Models\Utilisateur;
+use App\Models\Banque;
+use App\Models\Monnie;
+use App\Models\Ville;
+class ProfileController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index($user)
+    public function index()
     {
-        $clients = Utilisateur::with('client')->with('banque')->find($user);
-
-        return view('clients.index', compact('clients'));
+        $id_user = session('user')->id;
+        $utilisateur = Utilisateur::with(['client.type','client.rank'])->find($id_user);
+        $utilisateur->makeHidden(['password']);
+        $banques = Banque::all();
+        $villes = Ville::all();
+        $monnies = Monnie::all();
+        return view('profile.index', compact('utilisateur', 'monnies', 'banques', 'villes'));
+        // return response()->json($utilisateur);
 
     }
 
@@ -26,7 +30,7 @@ class ClientController extends Controller
      */
     public function create()
     {
-
+        //
     }
 
     /**

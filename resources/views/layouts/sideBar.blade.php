@@ -34,8 +34,14 @@
     transition: all 0.5s ease;
   }
 
+  .sidebar .logo-details .icon::before {
+    color: var(--bs-primary);
+  }
+
   .sidebar .logo-details .logo_name {
-    color: #fff;
+    display: inline-block;
+    white-space: nowrap;
+    color: var(--bs-primary);
     font-size: 20px;
     font-weight: 600;
     opacity: 0;
@@ -298,8 +304,16 @@
   }
 
   @media (max-width: 720px) {
-    .sidebar {
-      display: none;
+
+    .sidebar,
+    .sidebar li.profile {
+      z-index: 3;
+      left: -80px;
+    }
+
+    .open,
+    .open li.profile {
+      left: 0;
     }
 
     .sidebar~.main {
@@ -316,6 +330,15 @@
       overflow-x: hidden
     }
 
+    .sidebar.open~.main {
+      left: 0;
+      width: 100%;
+    }
+
+  }
+
+  .open .logo-details i::before {
+    color: var(--bs-primary) !important;
   }
 
   @media (max-width: 420px) {
@@ -326,10 +349,10 @@
 </style>
 {{-- ******************************************************** --}}
 
-<div class="sidebar">
+<div id="sidebar" class="sidebar">
   <div class="logo-details">
     <i class='bx bxl-codepen icon'></i>
-    <div class="logo_name"></div>
+    <div class="logo_name">App | Livraison</div>
     <i class='bx bx-menu' id="btn"></i>
   </div>
   <ul class="nav-list">
@@ -367,18 +390,13 @@
       </div>
       <span class="tooltip">Gestion d'inventaire</span>
     </li>
-    <li class="dropdown">
-      <a href="#" class="dropdown-btn">
+    <li>
+      <a href="{{ route('business.indexByClient') }}">
         <i class='bx bxs-store'></i>
         <span class="links_name">Gestion business</span>
       </a>
-      <div class="dropdown-content">
-        <a href="{{ route('clients.produit.index') }}">Ajouter business</a>
-        <a href="{{ route('clients.produit.create') }}">Liste des business</a>
-      </div>
       <span class="tooltip">Gestion business</span>
     </li>
-
     <li class="dropdown">
       <a href="#" class="dropdown-btn">
         <i class='bx bx-file'></i>
@@ -392,25 +410,21 @@
       <span class="tooltip">Bons et factures</span>
     </li>
 
-    <li class="dropdown">
-      <a href="#" class="dropdown-btn">
-        <i class='bx bx-file'></i>
-        <span class="links_name">Utilite</span>
+    <li>
+      <a href="#">
+        <i class='bx bx-support'></i>
+        <span class="links_name">Supports</span>
       </a>
-      <div class="dropdown-content">
-        <a href="#">Utilisateurs</a>
-        <a href="#">Supports</a>
-      </div>
-      <span class="tooltip">Utilite</span>
+      <span class="tooltip">Supports</span>
     </li>
     {{-- End dropdown --}}
 
     <li>
-      <a href="#">
+      <a href="{{route('profile.index')}}">
         <i class='bx bx-cog'></i>
-        <span class="links_name">Setting</span>
+        <span class="links_name">Settings</span>
       </a>
-      <span class="tooltip">Setting</span>
+      <span class="tooltip">Settings</span>
     </li>
     <li id="log-out" class="profile">
       <div class="profile-details">
@@ -499,5 +513,6 @@
         console.log("Error logging out:", error);
       });
   });
+
 
 </script>

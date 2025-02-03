@@ -6,7 +6,7 @@
 <div class="home">
     {{-- @include('layouts.sideBarAdmin') --}}
     @include('layouts.sideBar')
-    <div class="main">
+    <div class="main pb-5">
     @include('layouts.nav')
 
     </div>

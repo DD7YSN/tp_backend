@@ -11,7 +11,8 @@
 
     <div class="card-body p-3">
       <div class="mb-3 d-flex justify-content-between align-items-center">
-        <span id="btn-enregistrer" class="ms-auto btn btn-success mb-0">enregistrer</span>
+        <span id="btn-enregistrer" data-bs-toggle="modal" data-bs-target="#primary-header-modal"
+          class="ms-auto btn btn-success mb-0">enregistrer</span>
       </div>
       <div class="table-responsive border rounded">
         <table class="table align-middle text-nowrap mb-0">
@@ -134,9 +135,66 @@
     </div>
   </div>
 
+
+  <div id="primary-header-modal" class="modal fade" tabindex="-1" aria-labelledby="primary-header-modalLabel"
+    style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+      <div class="modal-content">
+        <div class="modal-header modal-colored-header bg-primary text-white">
+          <h4 class="modal-title text-white" id="primary-header-modalLabel">
+            Ville de ramassage
+          </h4>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h5 class="mt-0">Ville</h5>
+          <div class="row">
+            <div class="mb-3">
+              <select id="ville" class="form-select" name="id_ville">
+                <option value="" selected="">Choisissez une ville ...</option>
+                @foreach ($villes as $v)
+          <option value="{{$v->id}}">{{$v->nom_ville}}</option>
+        @endforeach
+              </select>
+            </div>
+
+            <div class="col-md-12">
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="tb-adresse" placeholder="Enter Name here">
+                <label for="tb-adresse">Adresse</label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="annuler" class="btn btn-light" data-bs-dismiss="modal">
+            Close
+          </button>
+          <button type="button" id="btn-ajouterBonRamassage" class="btn bg-primary-subtle text-primary ">
+            Save changes
+          </button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
   <script>
+
+    // const enregistrer = document.getElementById('btn-enregistrer');
+    // enregistrer.addEventListener('click', () => {
+    //   document.getElementById('primary-header-modal').classList.add('show')
+    // })
+    // const annuler = document.getElementById('annuler')
+    // annuler.addEventListener('click', () => {
+    //   slc_ville_ramassage.classList.remove('showForm')
+    // })
+
+
     const tout = document.getElementById('tout');
-    const enregistrer = document.getElementById('btn-enregistrer');
+    const ajouterBonRamassage = document.getElementById('btn-ajouterBonRamassage');
     tout.addEventListener('click', () => {
       const checkboxes = document.querySelectorAll('tbody tr td .coli-checked');
       checkboxes.forEach(checkbox => {
@@ -144,10 +202,12 @@
       });
     });
 
-    enregistrer.addEventListener('click', () => {
+    ajouterBonRamassage.addEventListener('click', () => {
       const checkboxes = document.querySelectorAll('tbody tr td .coli-checked');
+
+      
       const colis = [];
-      const villeRamasse = document.getElementById();
+      // const villeRamasse = document.getElementById();
 
       checkboxes.forEach(checkbox => {
         if (checkbox.checked) {
@@ -155,27 +215,64 @@
           colis.push(tr);
           checkboxes.checked = false;
           checkbox.closest('tr').remove();
-
         }
       });
-
-      console.log(colis);
-      // fetch(`/client/bon/ramassage/`, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     'X-CSRF-TOKEN': '{{ csrf_token() }}',
-      //   },
-      //   body: JSON.stringify({
-      //     'colis': colis
-      //   })
-      // }).then(response => response.json())
-      //   .then(data => {
-      //     console.log('Success:', data);
-      //   })
-      //   .catch((error) => {
-      //     console.error('Error:', error)
-      //   })
+      if (colis.length > 0) {
+        if (validation()) {
+          const ville = document.getElementById("ville").value;
+          const adresse = document.getElementById("tb-adresse").value;
+          const villeRamassage = [ville, adresse];
+          console.log(villeRamassage);
+          fetch(`/client/bon/ramassage/`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            },
+            body: JSON.stringify({
+              'colis': colis,
+              'villeRamassage': villeRamassage
+            })
+          }).then(response => response.json())
+            .then(data => {
+              document.getElementById('annuler').click()
+              console.log('Success:', data);
+            })
+            .catch((error) => {
+              console.error('Error:', error)
+            })
+        }
+      } else {
+        document.getElementById('annuler').click()
+      }
     })
+
+    function validation() {
+      const ville = document.getElementById("ville").value;
+      const adresse = document.getElementById("tb-adresse").value;
+      let isValide = true;
+
+      const errorMessages = document.querySelectorAll(".form-control-feedback");
+      errorMessages.forEach(msg => msg.remove());
+
+      if (ville === "") {
+        isValide = false;
+        showError("ville", "Veuillez choisir une ville.");
+      }
+      if (!adresse || adresse.trim() === "") {
+        isValide = false;
+        showError("tb-adresse", "L'adresse est requise.");
+      }
+      return isValide;
+    };
+    function showError(inputId, message) {
+      const inputField = document.getElementById(inputId);
+      const errorSmall = document.createElement("small");
+      errorSmall.classList.add("form-control-feedback", "text-danger");
+      errorSmall.textContent = message;
+      inputField.parentElement.appendChild(errorSmall);
+    }
+
+
   </script>
   @endsection

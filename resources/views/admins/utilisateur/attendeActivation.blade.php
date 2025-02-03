@@ -6,15 +6,20 @@
 <div class="home">
     @include('layouts.sideBarAdmin')
 
-    <div class="main">
-        
-        <div class="card right-side">
-            <div class="card-body">
-                <div class="mb-3 d-flex justify-content-between align-items-center">
+    <div class="main pb-5">
+        @include('layouts.nav')
+
+        <div class="card right-side  mx-lg-3 mt-5">
+            <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-center">
                     <h4 class="card-title mb-0">Liste des utilisateur</h4>
                     <a href="{{route('utilisateur.create')}}" class="btn btn-success mb-0">Ajouter</a>
                 </div>
-                <div class="table-responsive">
+            </div>
+        </div>
+        <div class="card-body mx-lg-3 mt-4">
+            <div>
+                <div class="table-responsive border rounded">
                     <table id="row_group" class="table w-100 table-striped table-bordered display text-nowrap dataTable"
                         aria-describedby="row_group_info">
                         <thead>
@@ -54,7 +59,7 @@
                                         <td class="text-center text-dark fw-semibold">
                                             {{$user->role->nom_role}}
                                         </td>
-                                        
+
                                         <td>
                                             <div class="form-check form-switch">
                                                 <input class="form-check-input success" type="checkbox" data-bs-toggle="modal"
@@ -63,7 +68,6 @@
                                                     {{$user->status ? 'Compte Actif' : 'Désactiver' }}</label>
                                             </div>
                                         </td>
-                                        <td></td>
                                         <td class="text-center">
                                             <div class="dropdown dropstart">
                                                 <a href="javascript:void(0)" class="text-muted" id="dropdownMenuButton"

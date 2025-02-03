@@ -103,12 +103,26 @@
     padding: 2px 6px;
     margin-left: 10px;
   }
+
+  #btn-global-menu {
+    cursor: pointer;
+    font-size: 23px;
+    color: #29343d;
+    visibility: hidden;
+  }
+
+  @media (max-width: 720px) {
+    #btn-global-menu {
+      visibility: visible;
+    }
+  }
 </style>
 <nav>
 
   <div class="menuProfile">
-    <img src="https://fakeimg.pl/250x50/" alt="logo">
+    <i class='bx bx-menu' id="btn-global-menu"></i>
     <div class="profile-container">
+
       <img height="80" src="https://fakeimg.pl/250x250/" alt="Profile Avatar" class="profile-avatar"
         onclick="toggleDropdown()" />
 
@@ -128,17 +142,11 @@
               My Invoice <span class="notification-badge">4</span>
             </a>
           </li>
-          <li><a href="#">Account Settings</a></li>
+          <li><a href="{{route('profile.index')}}">Account Settings</a></li>
           <li><a href="{{route('logout')}}">Sign Out</a></li>
         </ul>
       </div>
     </div>
-  </div>
-  <!-- menu bar -->
-  <div id="menu-bar">
-    <span></span>
-    <span></span>
-    <span></span>
   </div>
 </nav>
 <script>
@@ -155,4 +163,11 @@
       dropdown.classList.add("hidden");
     }
   });
+
+  const btn_global_menu = document.getElementById('btn-global-menu');
+  btn_global_menu.addEventListener('click', () => {
+    const sideBar = document.getElementById('sidebar').style.display = 'block';
+    document.getElementById('btn').click();
+  })
+
 </script>

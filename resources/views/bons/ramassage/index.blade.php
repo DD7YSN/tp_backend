@@ -34,13 +34,17 @@
         }
     </style>
 
-    <div class="main">
+    <div class="main pb-5">
         @include('layouts.nav')
-        <div class="card-body p-3">
-            <div class="mb-3 d-flex justify-content-between align-items-center">
-                <h4 class="card-title mb-0">Liste des Bons Ramassages</h4>
-                <span id="btn-ajouter" class="btn btn-success mb-0">Ajouter bon ramassage</span>
+        <div class="card right-side mx-lg-4 mt-5">
+            <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="card-title mb-0">Liste des Bons Ramassages</h4>
+                    <span id="btn-ajouter" class="btn btn-success mb-0">Ajouter bon ramassage</span>
+                </div>
             </div>
+        </div>
+        <div class="card right-side mx-lg-4 mt-4">
             <div class="table-responsive border rounded">
 
                 <table class="table align-middle text-nowrap mb-0">
@@ -49,6 +53,7 @@
                             <th scope="col">#Ref</th>
                             <th scope="col">Date de creation</th>
                             <th scope="col">Status</th>
+                            <th scope="col">Ville de ramassage</th>
                             <th scope="col">Colis</th>
                             <th scope="col">Total</th>
                             <th scope="col">Action</th>
@@ -67,7 +72,7 @@
                                                         <tr class="text-center">
                                                             <th>
                                                                 <h6 class="fw-semibold mb-0 fs-4">
-                                                                    {{$bonRamassage->id}}
+                                                                    {{$bonRamassage->ref_ramassage}}
                                                                 </h6>
                                                             </th>
                                                             <td>
@@ -82,6 +87,11 @@
                                                                     @else
                                                                         <span class="badge rounded-pill text-bg-danger">No Recu</span>
                                                                     @endif
+                                                                </h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6 class="fw-semibold mb-0 fs-4">
+                                                                    {{$bonRamassage->ville->nom_ville}}
                                                                 </h6>
                                                             </td>
                                                             <td>
@@ -173,7 +183,7 @@
         </div>
     </div>
 </div>
-</div>
+
 <div id="ajouterBonRamassage" class="mb-3 d-flex flex-column justify-content-between align-items-center gap-6">
     @if (count($noRamasse) > 0)
         <span class="badge  bg-info-subtle text-info py-2 px-3 mb-3"> ( {{count($noRamasse)}} ) Colis Pret la

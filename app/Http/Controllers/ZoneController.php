@@ -79,7 +79,7 @@ class ZoneController extends Controller
             ]);
             $zone = Zone::find($id);
             $zone->update($request->all());
-            return redirect()->route('zones.index',['message' => 'Zone successfully created!'], 201);
+            return redirect()->route('zones.index');
         }catch(Exception $err){
             return response()->json([
             'error' => 'Failed to create Zone',

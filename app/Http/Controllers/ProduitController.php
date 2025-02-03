@@ -15,9 +15,17 @@ class ProduitController extends Controller
     public function index()
     {
         $id_client = session('user')->id;
-        $business = Business::all();
-        $produits = Produit::with('varainte')->with('business')->where('id_utilisateur',$id_client)->orderByDesc('id')->paginate(5);
-        return view('produits.index' ,compact('produits','business'));
+        $business = Business::where('id_utilisateur', $id_client)->get();
+        $produits = Produit::with('business')->with([
+            'varainte' => function ($query) {
+                $query->where('status', 1);
+                $query->whereNotNull('id_responsable');
+            }
+        ])->where('id_utilisateur', $id_client)->whereHas('varainte', function ($query) {
+            $query->where('status', 1);
+            $query->whereNotNull('id_responsable');
+        })->orderByDesc('id')->paginate(5);
+        return view('produits.index', compact('produits', 'business'));
     }
 
     /**
@@ -25,8 +33,9 @@ class ProduitController extends Controller
      */
     public function create()
     {
-        $business = Business::all();
-        return view('produits.create',compact('business'));
+        $id_client = session('user')->id;
+        $business = Business::where('id_utilisateur', $id_client)->get();
+        return view('produits.create', compact('business'));
     }
 
     /**
@@ -44,8 +53,8 @@ class ProduitController extends Controller
     {
         $id_client = session('user')->id;
         $business = Business::where('id_utilisateur', $id_client);
-        $produits = Produit::with('varainte')->with('business')->where('id_utilisateur',$id_client)->orderByDesc('id')->paginate(5);
-        return view('produits.index' ,compact('produits','business'));
+        $produits = Produit::with('varainte')->with('business')->where('id_utilisateur', $id_client)->orderByDesc('id')->paginate(5);
+        return view('produits.index', compact('produits', 'business'));
     }
     public function show(string $id)
     {

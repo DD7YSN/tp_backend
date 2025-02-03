@@ -12,6 +12,8 @@ use App\Http\Controllers\ZoneController;
 use App\Models\Produit;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\BusinessController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\CheckAdminMiddleware;
 use App\Http\Middleware\CheckClientMiddleware;
 
@@ -23,8 +25,9 @@ Route::middleware(['auth', CheckClientMiddleware::class])->group(function () {
 
     Route::prefix('client')->group(function () {
 
-        Route::get('/{user}', [ClientController::class, 'index'])->name('clients.index');
+        Route::get('/{user}', [ClientController::class, 'index'])->where('user', '[0-9]+')->name('clients.index');
         Route::get('/create', [ClientController::class, 'create'])->name('clients.create');
+        Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
         Route::post('/', [ClientController::class, 'store'])->name('clients.store');
         // Route::get('/client/{id}', [ClientController::class, 'show'])->name('clients.show');
         Route::get('/edit/{id}', [ClientController::class, 'edit'])->name('clients.edit');
@@ -42,11 +45,16 @@ Route::middleware(['auth', CheckClientMiddleware::class])->group(function () {
         Route::put('/client/colis/update/{id}', [ColiController::class, 'update'])->name('colis.update');
         Route::delete('/client/colis/{id}', [ColiController::class, 'destroy'])->name('colis.destroy');
         // End Route Coli ::::::::::::::::::::::::::::::::
-        
+
         /// Stock Link ::::::::::::::::::::::::::
         Route::get('/stock/liste', [ProduitController::class, 'index'])->name('clients.produit.index');
         Route::get('/stock/create', [ProduitController::class, 'create'])->name('clients.produit.create');
         // End Route Store ::::::::::::::::::::::::::::::::
+        /// Business Link ::::::::::::::::::::::::::
+        Route::get('/business/liste', [BusinessController::class, 'indexByClient'])->name('business.indexByClient');
+        Route::get('/business/create', [BusinessController::class, 'create'])->name('business.create');
+        Route::post('/business/liste', [BusinessController::class, 'store'])->name('business.store');
+        // End Business Store ::::::::::::::::::::::::::::::::
         // Route Bon_Ramassage :::::::::::::::::
         Route::get('/bon/ramassage', [Bon_ramassageController::class, 'index'])->name('bon_ramassage.index');
         Route::get('/bon/ramassage/create', [Bon_ramassageController::class, 'create'])->name('bon_ramassage.create');

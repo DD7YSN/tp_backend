@@ -1,15 +1,15 @@
 @extends('layouts.master')
 
-@section('title', 'Admin | Livraison')
+@section('title', 'Client | Livraison')
 
 @section('content')
 <div class="home">
-      @include('layouts.sideBar')
+    @include('layouts.sideBar')
 
-      <div class="main">
+    <div class="main">
         @include('layouts.nav')
-        <div class="card right-side">
-            <div class="card-body p-4">
+        <div class="card right-side mx-lg-3 my-lg-5">
+            <div class="card-body">
 
                 <form id="formAjouterProduit" action="{{ route('villes.store') }}" method="POST">
                     @csrf
@@ -31,7 +31,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
-                                <input type="number" name="quantite" value="0" class="form-control" id="qte"
+                                <input type="number" name="quantite" value="0" class="form-control" id="qteProduit"
                                     placeholder="Quantite">
                                 <label for="qte">Quantite</label>
                             </div>
@@ -46,7 +46,7 @@
 
                         <div class="col-md-6 mx-auto">
                             <div class="mb-3">
-                                <select id="zone" class="form-select" name="id_zone">
+                                <select id="business" class="form-select" name="id_business">
                                     <option selected="">Choisissez une business ...</option>
                                     @foreach ($business as $b)
                                         <option value="{{$b->id}}">{{$b->nom_business}}</option>
@@ -92,27 +92,30 @@
 </div>
 
 
-        <script>
+<script>
 
-            const formAjouterVille = document.getElementById('formAjouterVille');
+    const formAjouterVille = document.getElementById('formAjouterVille');
 
-            formAjouterProduit.addEventListener('submit', function (event) {
-                event.preventDefault();
-                if (dataValid()) {
-                    this.submit();
-                }
-            })
+    formAjouterProduit.addEventListener('submit', function (event) {
+        event.preventDefault();
+        if (dataValid()) {
+            this.submit();
+        }
+    })
 
 
-            let room = 1;
-            function education_fields() {
-                room++;
-                let objTo = document.getElementById("education_fields");
-                let divtest = document.createElement("div");
-                divtest.setAttribute("class", "mb-3 removeclass" + room);
-                let rdiv = "removeclass" + room;
-                divtest.innerHTML =
-                    `<form class="row">
+    let room = 1;
+    function education_fields() {
+        if (document.querySelectorAll('#education_fields form.row').length === 0) {
+            document.getElementById("qteProduit").setAttribute('disabled', true);
+        };
+        room++;
+        let objTo = document.getElementById("education_fields");
+        let divtest = document.createElement("div");
+        divtest.setAttribute("class", "mb-3 removeclass" + room);
+        let rdiv = "removeclass" + room;
+        divtest.innerHTML =
+            `<form class="row">
             <div class="col-sm-4 mb-3">
                 <div class="form-group">
                     <input type="text" class="form-control" id="nom_varainte" name="nom_varainte" placeholder="Nom varainte"></div>
@@ -135,16 +138,20 @@
             </div>
             </form>`;
 
-                objTo.appendChild(divtest);
-            }
+        objTo.appendChild(divtest);
+    }
 
-            function remove_education_fields(rid) {
-                var elements = document.querySelectorAll('.removeclass' + rid);
-                elements.forEach(function (element) {
-                    element.remove();
-                });
-            }
+    function remove_education_fields(rid) {
+        if (document.querySelectorAll('#education_fields form.row').length === 1) {
+            document.getElementById("qteProduit").removeAttribute('disabled');
 
-        </script>
+        }
+        const elements = document.querySelectorAll('.removeclass' + rid);
+        elements.forEach(function (element) {
+            element.remove();
+        });
+    }
 
-        @endsection
+</script>
+
+@endsection
