@@ -12,15 +12,13 @@ variables:
   DB_PASSWORD: ""
 
 before_script:
-  # Update package lists and install Git and other necessary dependencies
+  # Update package lists and install Git, curl, and other necessary dependencies
   - apt-get update -y
-  - apt-get install -y git libpng-dev libjpeg-dev libfreetype6-dev zip unzip
-  # Install the necessary PHP extensions
-  - docker-php-ext-configure gd --with-freetype --with-jpeg
-  - docker-php-ext-install gd  # Update package lists and install Git and other necessary dependencies
-  - apt-get update -y
-  - apt-get install -y git libpng-dev libjpeg-dev libfreetype6-dev zip unzip
-  # Install the necessary PHP extensions
+  - apt-get install -y git curl libpng-dev libjpeg-dev libfreetype6-dev zip unzip
+  # Install Node.js and npm (to use npm install)
+  - curl -sL https://deb.nodesource.com/setup_16.x | bash -  # Setup Node.js 16.x repository
+  - apt-get install -y nodejs  # Install Node.js and npm
+  # Install PHP extensions
   - docker-php-ext-configure gd --with-freetype --with-jpeg
   - docker-php-ext-install gd
 
@@ -34,10 +32,14 @@ install_dependencies:
     # Install npm dependencies
     - npm install
     - npm run dev
+  cache:
+    paths:
+      - node_modules/
+      - vendor/
 
 test:
   stage: test
-  image: php:8.2-fpm
+  image: php:8.2-fpm  # Or your desired PHP version
   script:
     - php artisan key:generate
     - php artisan migrate --env=testing
@@ -49,7 +51,7 @@ deploy:
   stage: deploy
   script:
     - echo "Deploying Laravel project"
-    - rsync -avz --exclude 'node_modules/' --exclude '.git/' ./ gitlab.com/dd7_ysn/livraison
-    - ssh git@gitlab.com:dd7_ysn/livraison.git && php artisan migrate --force && php artisan config:cache && php artisan route:cache'
+    - rsync -avz --exclude 'node_modules/' --exclude '.git/' ./ user@yourserver:/path/to/your/project
+    - ssh user@yourserver 'cd /path/to/your/project && php artisan migrate --force && php artisan config:cache && php artisan route:cache'
   only:
     - main
