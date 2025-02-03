@@ -18,6 +18,7 @@ install-job:
   script:
     - composer install --no-interaction --prefer-dist
 
+
 test-job:
   stage: test
   image: php:8.1-fpm
@@ -31,12 +32,13 @@ test-job:
     - php artisan db:seed --env=testing
     - vendor/bin/phpunit --configuration phpunit.xml
 
+
 deploy-job:
   stage: deploy
   script:
     - echo "Deploying Laravel application to production..."
     - echo "Application successfully deployed."
-    # Add your actual deployment steps here, like SCP, SSH, etc.
   environment: production
   only:
-    - main  # Change to your deployment branch (e.g., "main" or "master")
+    - main
+
