@@ -1,57 +1,55 @@
+image: php:8.2-fpm
+
+variables:
+  APP_ENV: testing
+  DB_CONNECTION: sqlite
+  DB_DATABASE: ":memory:"
+  CACHE_DRIVER: array
+  QUEUE_CONNECTION: sync
+  SESSION_DRIVER: array
+  COMPOSER_CACHE_DIR: "/cache/composer"
+
+cache:
+  paths:
+    - vendor/
+    - $COMPOSER_CACHE_DIR/
+
+services:
+  - mysql:latest
+
 stages:
-  - install
+  - prepare
   - test
   - deploy
 
-variables:
-  DB_CONNECTION: mysql
-  DB_HOST: "127.0.0.1"
-  DB_PORT: "3306"
-  DB_DATABASE: "project_stage"
-  DB_USERNAME: "root"
-  DB_PASSWORD: ""
-
 before_script:
-  # Update package lists and install Git, curl, and other necessary dependencies
-  - apt-get update -y
-  - apt-get install -y git curl libpng-dev libjpeg-dev libfreetype6-dev zip unzip
-  # Install Node.js and npm (to use npm install)
-  - curl -sL https://deb.nodesource.com/setup_16.x | bash -  # Setup Node.js 16.x repository
-  - apt-get install -y nodejs  # Install Node.js and npm
-  # Install PHP extensions
-  - docker-php-ext-configure gd --with-freetype --with-jpeg
-  - docker-php-ext-install gd
+  - apt-get update && apt-get install -y unzip git curl libpq-dev zip
+  - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  - cp .env.example .env
+  - composer install --prefer-dist --no-progress --no-interaction
+  - php artisan key:generate
 
-install_dependencies:
-  stage: install
-  image: php:8.2-fpm  # Or your desired PHP version
+migrate:
+  stage: prepare
   script:
-    # Install Composer if not already installed
-    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-    - composer install --no-interaction --prefer-dist
-    # Install npm dependencies
-    - npm install
-    - npm run dev
-  cache:
-    paths:
-      - node_modules/
-      - vendor/
+    - php artisan migrate --force
+  only:
+    - main
 
 test:
   stage: test
-  image: php:8.2-fpm  # Or your desired PHP version
   script:
-    - php artisan key:generate
-    - php artisan migrate --env=testing
-    - php artisan test
+    - vendor/bin/phpunit --testdox
   only:
+    - merge_requests
     - main
 
 deploy:
   stage: deploy
   script:
-    - echo "Deploying Laravel project"
-    - rsync -avz --exclude 'node_modules/' --exclude '.git/' ./ user@yourserver:/path/to/your/project
-    - ssh user@yourserver 'cd /path/to/your/project && php artisan migrate --force && php artisan config:cache && php artisan route:cache'
+    - echo "Deploying application..."
+    - php artisan config:cache
+    - php artisan route:cache
+    - php artisan migrate --force
   only:
     - main
