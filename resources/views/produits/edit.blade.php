@@ -100,7 +100,7 @@
                     </div>
                 </div>
 
-                <!-- Displaying Business Dropdown -->
+                
                 <div class="col-md-6 mx-auto">
                     <div class="mb-3">
                         <select id="business" class="form-select" name="id_business">
@@ -115,7 +115,7 @@
                     </div>
                 </div>
 
-                <!-- Variant Fields Section -->
+                
                 <div class="col-md-12 mb-3">
                     <button onclick="education_fields();" class="btn btn-success fw-medium" type="button">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -129,7 +129,6 @@
                     </button>
                 </div>
 
-                <!-- Displaying Existing Variants -->
                 <div id="education_fields">
                     @foreach ($produit->varainte as $variant)
                         <div id="variant{{ $variant->id }}" class="row variant-field">
@@ -170,7 +169,6 @@
                     @endforeach
                 </div>
 
-                <!-- Submit & Cancel -->
                 <div class="col-12">
                     <div class="d-md-flex align-items-center">
                         <div class="d-flex gap-6 ms-auto mt-3 mt-md-0">
@@ -191,7 +189,7 @@
 </div>
 
 <script>
-    // Function to dynamically add variant fields
+    
     document.addEventListener('DOMContentLoaded', function () {
         let variantCount = {{ $produit->varainte->count() }};
         
