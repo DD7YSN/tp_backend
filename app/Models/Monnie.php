@@ -8,6 +8,6 @@ class Monnie extends Model
 {
     public $timestamps = false;
 
-    protected $fillable = ['monnie'];
+    protected $fillable = ['nom_monnie'];
     //
 }

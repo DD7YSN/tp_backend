@@ -20,6 +20,7 @@ class CheckAdminMiddleware
         $role = Role::where('nom_role','admin')->first();
         if (Auth::check() && Auth::user()->id_role === $role->id) {
                 $request->session()->put('user',Auth::user());
+                $request->session()->put('role','admin');
                 return $next($request);
         }
 

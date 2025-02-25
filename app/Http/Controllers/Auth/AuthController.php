@@ -60,7 +60,6 @@ class AuthController extends Controller
             $role = Role::find($id);
 
             if ($role->nom_role === 'admin') {
-                // dd(Auth::user());
                 return redirect()->route('dashboard.admin');
             }
             else if ($role->nom_role === 'client') {
@@ -78,7 +77,7 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->session()->forget('user');
+        $request->session()->flush();
         Auth::logout();
         return redirect()->route('login');
     }

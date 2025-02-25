@@ -14,6 +14,7 @@ use App\Http\Controllers\BonEnvoiController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\GeneralConteroller;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\BanqueController;
 use App\Http\Middleware\CheckAdminMiddleware;
 use App\Http\Middleware\CheckClientMiddleware;
 use App\Http\Controllers\UtilisateurController;
@@ -102,6 +103,15 @@ Route::middleware(['auth', CheckAdminMiddleware::class])->group(function () {
         Route::delete('/stock/{id}', [ProduitController::class, 'destroy'])->name('produit.destroy');
 
 
+        // Start Route Banque ::::::::::::::::::::::::::::::::
+        Route::get('/banques', [BanqueController::class, 'index'])->name('banques.index');
+        Route::get('/banques/edit/{id}', [BanqueController::class, 'edit'])->name('banques.edit');
+        Route::get('/banques/create', [BanqueController::class, 'create'])->name('banques.create');
+        Route::post('/banques', [BanqueController::class, 'store'])->name('banques.store');
+        Route::put('/banques/{id}', [BanqueController::class, 'update'])->name('banques.update');
+        Route::delete('/banques/{id}', [BanqueController::class, 'destroy'])->name('banques.destroy');
+
+        // End Route Banque ::::::::::::::::::::::::::::::::
 
         /// Parameters Link ::::::::::::::::::::::::::
         // Start Route Ville ::::::::::::::::::::::::::::::::
