@@ -37,6 +37,7 @@
     .div-confirmation {
         position: absolute;
         top: -80px;
+        left: 50%;
         transform: translateX(-50%);
         background: white;
         padding: 20px;
@@ -54,8 +55,7 @@
         top: 0;
     }
     .showConfirm .div-confirmation {
-        top: 275px;
-        left: 50%;
+        top: 235px;
     }
 
     @media screen and (max-width: 992px) {
