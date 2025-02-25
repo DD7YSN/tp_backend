@@ -85,7 +85,7 @@
             <!-- End Message -->
 
             <div class="card right-side mx-lg-3 mt-3">
-                <div id="ajouterColi" class="card-body p-3">
+                <div class="card-body p-3">
                     <div class="d-flex justify-content-between align-items-center">
                         <h4 class="card-title mb-0">Liste des Banques</h4>
                         <span id="ajouterBanque" class="btn btn-success mb-0">Ajouter</span>

@@ -17,19 +17,29 @@ class ProduitController extends Controller
      */
     public function index()
     {
-        $id_client = session('user')->id;
-        $business = Business::where('id_utilisateur', $id_client)->get();
-        $produits = Produit::with('business')->with(['varainte' => function ($query) {
-            $query->where('status', 1);
-            $query->whereNotNull('id_responsable');
-        }])
-        ->where('id_client', $id_client)
-        ->where('status', 1)
-        ->whereNotNull('id_responsable')
-        ->orderByDesc('id')->paginate(5);
+        try {
+            $id_client = session('user')->id;
+            
+            $business = Business::where('id_utilisateur', $id_client)->get();
 
-        return view('produits.index', compact('produits', 'business'));
+            $produits = Produit::with(['business', 'varainte' => function ($query) {
+                $query->where('status', 1);
+                $query->whereNotNull('id_responsable');
+            }])
+            ->where('id_client', $id_client)
+            ->where('status', 1)
+            ->whereNotNull('id_responsable')
+            ->orderByDesc('id')
+            ->paginate(25);
+
+            return view('produits.index', compact('produits', 'business'));
+
+        } catch (\Exception $e) {
+            
+            return redirect()->route('produits.index')->with('error', 'There was an error fetching the products. Please try again later.');
+        }
     }
+
 
     public function produitsByBusiness(string $idBusiness)
     {
@@ -148,30 +158,16 @@ class ProduitController extends Controller
                     ]);
                 }
             }
-            return redirect()->route('produit.create');
-            // return response()->json([
-            //     'success' => true,
-            //     'message' => 'Produit et variantes créés avec succès.',
-            //     'data' => $produit,
-            // ], 201);
+            return back()->with('success', 'Produit créé avec succès!');
         }catch (ValidationException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation error.',
-                'errors' => $e->errors(),
-            ], 422);
 
+            return back()->with('error', 'Échec de la création du produit: ' . $e->errors());
+            
         } catch (QueryException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Erreur de base de données. Veuillez vérifier vos saisies.'
-            ], 500);
-
+            return back()->with('error', 'Erreur de base de données. Veuillez vérifier vos saisies.');
+            
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Une erreur s\'est produite. Veuillez réessayer plus tard.'
-            ], 500);
+            return back()->with('error', 'Une erreur s\'est produite. Veuillez réessayer plus tard.');
         }
     }
 
@@ -180,11 +176,23 @@ class ProduitController extends Controller
      */
     public function inventory(string $id)
     {
-        $id_client = session('user')->id;
-        $business = Business::where('id_utilisateur', $id_client);
-        $produits = Produit::with('varainte')->with('business')->where('id_utilisateur', $id_client)->orderByDesc('id')->paginate(5);
-        return view('produits.index', compact('produits', 'business'));
-    }
+        try {
+            $id_client = session('user')->id;
+
+            $business = Business::where('id_utilisateur', $id_client)->get();
+
+            $produits = Produit::with('varainte', 'business')
+                ->where('id_utilisateur', $id_client)
+                ->orderByDesc('id')
+                ->paginate(25);
+
+            return view('produits.index', compact('produits', 'business'));
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Erreur lors de la récupération de l\'inventaire: ' . $e->getMessage());
+        }
+}
+
     public function show(string $id)
     {
         //
@@ -197,10 +205,13 @@ class ProduitController extends Controller
     {
         $id_client = session('user')->id;
         $produit = Produit::findOrFail($id);
+        $business = Business::where('id_utilisateur', $id_client)->get();
+
 
         if ($produit->id_client != $id_client) {
-            return response()->json(['message' => 'You do not have permission to edit this product.'], 403);
+            return redirect()->route('clients.produit.index')->with('error', 'Vous n\'êtes pas autorisé à modifier ce produit.');
         }
+        return view('produits.edit', compact('produit','business'));
 
     }
 
@@ -210,64 +221,86 @@ class ProduitController extends Controller
  */
     public function update(Request $request, string $id)
     {
-        $id_client = session('user')->id;
-        $request->validate([
-            'nom_produit' => 'required|string|max:30',
-            'SKU' => 'required|string|max:255',
-            'quantite' => 'required|integer|min:0',
-            'note' => 'nullable|string|max:255',
-            'id_business' => 'required|exists:businesses,id',
-            'variants' => 'nullable|array',
-            'variants.*.nom_varainte' => 'required|string|max:20',
-            'variants.*.SKU' => 'required|string|max:255',
-            'variants.*.quantite' => 'required|integer|min:0',
-        ]);
+        // dd($request->all());
+        try {
+           
+            $id_client = session('user')->id;
 
-        $produit = Produit::findOrFail($id);
+            $request->validate([
+                'nom_produit' => 'required|string|max:30',
+                'SKU' => 'required|string|max:255',
+                'quantite' => 'required|integer|min:0',
+                'note' => 'nullable|string|max:255',
+                'id_business' => 'required|exists:businesses,id',
+                'variants' => 'nullable|array',
+                'variants.*.nom_varainte' => 'required|string|max:20',
+                'variants.*.SKU' => 'required|string|max:255',
+                'variants.*.quantite' => 'required|integer|min:0',
+            ]);
 
-        if ($produit->id_client != $id_client) {
-            return response()->json(['message' => 'You do not have permission to update this product.'], 403);
-        }
+           
+            $produit = Produit::findOrFail($id);
 
-        $produit->update([
-            'nom_produit' => $request->nom_produit,
-            'SKU' => $request->SKU,
-            'quantite' => $request->quantite,
-            'note' => $request->note,
-            'id_business' => $request->id_business,
-        ]);
-
-        if ($request->has('variants')) {
-            foreach ($request->variants as $variant) {
-                Varainte::updateOrCreate(
-                    ['id' => $variant['id'] ?? null, 'id_produit' => $produit->id],
-                    [
-                        'nom_varainte' => $variant['nom_varainte'],
-                        'SKU' => $variant['SKU'],
-                        'quantite' => $variant['quantite'],
-                        'status' => 0,
-                        'id_responsable' => null,
-                    ]
-                );
+           
+            if ($produit->id_client != $id_client) {
+                return redirect()->route('clients.produit.index')->with('error', 'Vous n\'êtes pas autorisé à modifier ce produit.');
             }
-        }
 
-        return response()->json(['message' => 'Product updated successfully!', 'product' => $produit]);
+           
+            $produit->update([
+                'nom_produit' => $request->nom_produit,
+                'SKU' => $request->SKU,
+                'quantite' => $request->quantite,
+                'note' => $request->note,
+                'id_business' => $request->id_business,
+                'status' => 0,
+            ]);
+
+           
+            if ($request->has('variants')) {
+                foreach ($request->variants as $v) {
+                    if (isset($v['SKU'])) {
+                     Varainte::where('SKU', $v['SKU'])
+                        ->update([
+                            'nom_varainte' => $v['nom_varainte'],
+                            'SKU' => $v['SKU'],
+                            'quantite' => $v['quantite'],
+                            'status' => 0,
+                            'id_responsable' => null,
+                        ]);
+                    }
+                }
+            }else{
+                Varainte::where('id_produit', $produit->id)->delete();
+            }
+
+            return redirect()->route('clients.produit.index')->with('success', 'Produit mis à jour avec succès!');
+        } catch (\Exception $e) {
+           
+            return redirect()->route('clients.produit.index')->with('error', 'Erreur lors de la mise à jour du produit: ' . $e->getMessage());
+        }
     }
 
 
-    public function destroy(string $id)
-    {
+
+public function destroy(string $id)
+{
+    try {
         $id_client = session('user')->id;
+        
         $produit = Produit::findOrFail($id);
 
         if ($produit->id_client != $id_client) {
-            return response()->json(['message' => 'You do not have permission to delete this product.'], 403);
+            return redirect()->route('clients.produit.index')->with('error', 'Vous n\'êtes pas autorisé à supprimer ce produit.');
         }
+        
         Varainte::where('id_produit', $produit->id)->delete();
-
         $produit->delete();
-
-        return response()->json(['message' => 'Product deleted successfully!']);
+        
+        return redirect()->route('clients.produit.index')->with('success', 'Produit supprimé avec succès!');
+    } catch (\Exception $e) {
+        return redirect()->route('clients.produit.index')->with('error', 'Error deleting product: ' . $e->getMessage());
     }
+}
+
 }

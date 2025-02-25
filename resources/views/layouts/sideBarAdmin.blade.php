@@ -389,6 +389,14 @@
       </a>
       <span class="tooltip">Banques</span>
     </li>
+    
+    <li>
+      <a href="{{ route('monnies.index') }}">
+        <i class='bx bxl-bitcoin fs-7'></i>
+        <span class="links_name">Monnies</span>
+      </a>
+      <span class="tooltip">Monnies</span>
+    </li>
 
     <li class="dropdown">
       <a href="#" class="dropdown-btn">

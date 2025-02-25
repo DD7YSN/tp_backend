@@ -83,7 +83,7 @@ class BanqueController extends Controller
             $banque = Banque::findOrFail($id);
             $banque->delete();
 
-            return redirect()->route('banques.index')->with('success', 'Banque deleted successfully.');
+            return redirect()->route('banques.index')->with('success', "$banque->nom_banque banque deleted successfully.");
         } catch (\Exception $e) {
             return redirect()->route('banques.index')->with('error', 'Error deleting banque: ' . $e->getMessage());
         }

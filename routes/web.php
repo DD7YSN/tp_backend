@@ -22,6 +22,7 @@ use App\Http\Controllers\Bon_ramassageController;
 use App\Http\Middleware\CheckModerateurMiddleware;
 use App\Http\Controllers\BonDistributionController;
 use App\Http\Controllers\DashboardClientController;
+use App\Http\Controllers\MonnieConteroller;
 
 Route::middleware(['auth', CheckClientMiddleware::class])->group(function () {
     Route::prefix('client')->group(function () {
@@ -56,10 +57,12 @@ Route::middleware(['auth', CheckClientMiddleware::class])->group(function () {
         /// Stock Link ::::::::::::::::::::::::::
         Route::get('/stock/liste', [ProduitController::class, 'index'])->name('clients.produit.index');
         Route::get('/stock/produits', [ProduitController::class, 'getProducts'])->name('clients.list.produit');
+        Route::get('/stock/produits/{id}', [ProduitController::class, 'edit'])->name('clients.produit.edit');
         Route::get('/stock/produits/business/{idBusiness}', [ProduitController::class, 'produitsByBusiness'])->name('clients.list.produitsByBusiness');
         Route::get('/stock/create', [ProduitController::class, 'create'])->name('clients.produit.create');
         Route::post('/stock', [ProduitController::class, 'store'])->name('clients.produit.store');
-        Route::delete('/stock/{id}', [ProduitController::class, 'destroy'])->name('clients.produit.destroy');
+        Route::put('/stock/produits/{id}', [ProduitController::class, 'update'])->name('clients.produit.update');
+        Route::delete('/stock/produit/{id}', [ProduitController::class, 'destroy'])->name('clients.produit.destroy');
         // End Route Store ::::::::::::::::::::::::::::::::
         /// Business Link ::::::::::::::::::::::::::
         Route::get('/business/liste', [BusinessController::class, 'indexByClient'])->name('business.indexByClient');
@@ -101,6 +104,15 @@ Route::middleware(['auth', CheckAdminMiddleware::class])->group(function () {
         Route::get('/stock/{id}', [ProduitController::class, 'inventory'])->name('produit.inventory');
         Route::get('/stock/edit/{id}', [ProduitController::class, 'edit'])->name('produit.edit');
         Route::delete('/stock/{id}', [ProduitController::class, 'destroy'])->name('produit.destroy');
+
+
+        // Start Route Monnie ::::::::::::::::::::::::::::::::
+        Route::get('/monnies', [MonnieConteroller::class, 'index'])->name('monnies.index');
+        Route::get('/monnies/edit/{id}', [MonnieConteroller::class, 'edit'])->name('monnies.edit');
+        Route::post('/monnies', [MonnieConteroller::class, 'store'])->name('monnies.store');
+        Route::put('/monnies/{id}', [MonnieConteroller::class, 'update'])->name('monnies.update');
+        Route::delete('/monnies/{id}', [MonnieConteroller::class, 'destroy'])->name('monnies.destroy');
+        // End Route Monnie ::::::::::::::::::::::::::::::::
 
 
         // Start Route Banque ::::::::::::::::::::::::::::::::

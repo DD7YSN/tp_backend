@@ -91,7 +91,7 @@
                                                     <path d="M4.5 3.5l10.5 11.5" />
                                                 </svg>
 
-                                                in Stock :
+                                                Produits :
                                             </span>
                                             <div class="ms-2 text-start">
 

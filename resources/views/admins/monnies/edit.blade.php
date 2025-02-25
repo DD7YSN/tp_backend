@@ -25,15 +25,15 @@
 
 
             <div class="card right-side mx-lg-3 mt-3 p-3">
-                <form id="formAjouterBanque" action="{{ route('banques.update', $banque->id) }}" method="POST">
+                <form id="formAjouterMonnie" action="{{ route('monnies.update', $monnie->id) }}" method="POST">
                     @csrf
                     @method('PUT')
-                    <h4 class="card-title mb-3 text-center">Modifier Banque</h4>
+                    <h4 class="card-title mb-3 text-center">Modifier Monnie</h4>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating mb-3">
-                                <input type="text" name="nom_banque" class="form-control" id="tb-nbanque" value="{{ old('nom_banque', $banque->nom_banque) }}" placeholder="Enter nom banque">
-                                <label for="tb-ref">Nom Banque</label>
+                                <input type="text" name="nom_monnie" class="form-control" id="tb-nmonnie" value="{{ old('nom_monnie', $monnie->nom_monnie) }}" placeholder="Enter nom banque">
+                                <label for="tb-ref">Nom Monnie</label>
                             </div>
                         </div>
                         <div class="col-12">
@@ -55,16 +55,16 @@
 </div>
 <script>
     function validateForm() {
-        const nomBanque = document.getElementById("nom_banque").value;
+        const nomMonnie = document.getElementById("nom_monnie").value;
         const errorMessage = document.getElementById("error-message");
         
-        if (nomBanque.trim() === "") {
-            errorMessage.innerText = "Nom Banque is required.";
+        if (nomMonnie.trim() === "") {
+            errorMessage.innerText = "Nom Monnie is required.";
             return false;
         }
         
-        if (nomBanque.length > 30) {
-            errorMessage.innerText = "Nom Banque should not exceed 30 characters.";
+        if (nomMonnie.length > 30) {
+            errorMessage.innerText = "Nom Monnie should not exceed 30 characters.";
             return false;
         }
         
