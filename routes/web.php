@@ -148,7 +148,9 @@ Route::middleware(['auth', CheckAdminMiddleware::class])->group(function () {
 
 // Start Route Mod ::::::::::::::::::::::::::::::::
 Route::middleware(['auth', CheckModerateurMiddleware::class])->group(function () {
-
+    Route::get('/dashboard',function (){
+        return view('moderateur.dashboard');
+    })->name('moderateur.dashboard');
     Route::get('/moderateur/colis', [ColiController::class, 'colisZone'])->name('moderateur.colis');
     Route::get('/bonDistribution', [BonDistributionController::class, 'index'])->name('bonDistr.index');
     Route::get('/bonDistribution/create', [BonDistributionController::class, 'create'])->name('bonDistr.create');

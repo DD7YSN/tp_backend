@@ -12,4 +12,9 @@ class Coli_stock extends Model
     {
         return $this->belongsTo(Coli::class, 'id_coli');
     }
+
+    public function bonDistribution()
+    {
+        return $this->belongsTo(Bon_distribution::class, 'bon_distribution');
+    }
 }

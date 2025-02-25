@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BonDistribution;
+use App\Models\Bon_distribution;
 use App\Models\Coli;
-use App\Models\Utilisateur;
 use App\Models\Zone;
+use App\Models\Utilisateur;
 use Illuminate\Http\Request;
+use App\Models\Ville;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+
 class BonDistributionController extends Controller
 {
     /**
@@ -15,18 +18,24 @@ class BonDistributionController extends Controller
      */
     public function index()
     {   
-        $zoneId = 5;
-        $bonDistributions = BonDistribution::whereHas('coli.ville.zone', function ($query) use ($zoneId) {
+        $user = Auth::user();
+        $id_ville = $user->local;
+        $ville = Ville::where('id', $id_ville)->first();
+        $zoneId = $ville->id_zone;
+        $bonDistributions = Bon_distribution::whereHas('coli.ville.zone', function ($query) use ($zoneId) {
             $query->where('id', $zoneId);
         })
         ->with('coli.ville.zone')
         ->get();
-        return view('moderateur.bonDistribution', compact('bonDistributions'));
+        return view('moderateur.bonDistribution', compact('bonDistributions','zoneId1','id_ville'));
     }
 
 
     public function ajouterBonDistr(){
-        $zoneId = 5;
+        $user = Auth::user();
+        $id_ville = $user->local;
+        $ville = Ville::where('id', $id_ville)->first();
+        $zoneId = $ville->id_zone;
         $zone = Zone::where('id', $zoneId)->first();
         $colis = Coli::whereHas('ville.zone',function ($query) use ($zoneId) {
             $query->where('id', $zoneId);
@@ -39,7 +48,10 @@ class BonDistributionController extends Controller
      */
     public function create(Request $request)
     {
-        $zoneId = 5;
+        $user = Auth::user();
+        $id_ville = $user->local;
+        $ville = Ville::where('id', $id_ville)->first();
+        $zoneId = $ville->id_zone;
         $livreur = Utilisateur::whereHas('ville.zone', function ($query) use ($zoneId) {
             $query->where('id', $zoneId);
         })->get();
@@ -61,12 +73,11 @@ class BonDistributionController extends Controller
     public function store(Request $request)
 {
     $bonDistributions = $request->input('bonDistributions');
-    Log::info('bonDistributions: ' . json_encode($bonDistributions));
 
     // Iterate over each bonDistribution in the request
     foreach ($bonDistributions as $bonDistribution) {
         // Create the BonDistribution with the livreur_id
-        $bonDistr = BonDistribution::create([
+        $bonDistr = Bon_distribution::create([
             'id_livreur' => $bonDistribution['livreur_id'],
             'status'=> 1
         ]);

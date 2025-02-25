@@ -77,7 +77,7 @@
       <div class="ajt-bonDistribution text-end me-4">
         <a href="{{route('bonDistr.create')}}"><button class="btn btn-success mt-3 ">Ajouter Bon de distribution</button></a>
       </div>
-      
+      <p>ID Ville: {{ $id_ville }}</p>
       
       <div class="table-cont mx-auto">
         <div class="table-responsive">

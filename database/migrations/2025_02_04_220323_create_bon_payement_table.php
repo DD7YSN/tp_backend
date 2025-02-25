@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bon_payement', function (Blueprint $table) {
+        Schema::create('bon_payements', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_moderateur')->constrained('utilisateurs');
             $table->float('total');
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bon_payement');
+        Schema::dropIfExists('bon_payements');
     }
 };
