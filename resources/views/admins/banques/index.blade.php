@@ -23,6 +23,41 @@
         visibility: visible !important;
     }
 
+    .delete-confirmation {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9;
+        visibility: hidden;
+    }
+
+    .div-confirmation {
+        position: absolute;
+        top: -80px;
+        transform: translateX(-50%);
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        max-width: 400px;
+        width: 100%;
+        height: fit-content;
+        transition: 1s;
+    }
+
+    .showConfirm{
+        display: flex !important;
+        visibility: visible;
+        top: 0;
+    }
+    .showConfirm .div-confirmation {
+        top: 275px;
+        left: 50%;
+    }
+
     @media screen and (max-width: 992px) {
         #formAjouterBanque {
             width: 90%;
@@ -103,12 +138,8 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <form id="delete-form-{{ $b->id }}" action="{{ route('banques.destroy', $b->id) }}" method="POST" style="display:none;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                    </form>
                                                     <a class="dropdown-item d-flex align-items-center gap-2" href="javascript:void(0);" 
-                                                        onclick="deleteBanque({{ $b->id }})">
+                                                    onclick="deleteConfirmation({{ $b->id }})">
                                                         <i class='bx bxs-trash fs-7'></i>
                                                         Delete
                                                     </a>
@@ -127,6 +158,20 @@
             </div>
     </div>
 </div>
+
+{{-- Start Div Confirmation --}}
+<div id="deleteConfirmation" class="delete-confirmation">
+    <div class="div-confirmation">
+        <p>Are you sure you want to delete this banque?</p>
+        <button class="btn btn-danger mt-3 me-2" id="confirmDelete" onclick="deleteBanque()">Yes, Delete</button>
+        <button class="btn btn-secondary mt-3 ms-2" id="cancelDelete" onclick="cancelDelete()">Cancel</button>
+    </div>
+</div>
+<form id="deleteForm" action="" method="POST" style="display: none;">
+    @csrf
+    @method('DELETE')
+</form>
+{{-- End Div Confirmation --}}
 
 <form id="formAjouterBanque" action="{{ route('banques.store') }}" method="POST">
     @csrf
@@ -181,12 +226,22 @@
     }
 
 
-</script>
+    let idBanque = null;
+    // Show the confirmation div
+    function deleteConfirmation(id) {
+        idBanque = id;
+        document.getElementById('deleteConfirmation').classList.add('showConfirm');
+    }
 
-<script>
-    function deleteBanque(id) {
-        if (confirm('Are you sure you want to delete this banque?')) {
-            document.getElementById('delete-form-' + id).submit();
+    function cancelDelete() {
+        document.getElementById('deleteConfirmation').classList.remove('showConfirm');
+    }
+
+    function deleteBanque() {
+        const deleteForm = document.getElementById('deleteForm');
+        if(idBanque != null){
+            deleteForm.action = '/admin/banques/' + idBanque;
+            deleteForm.submit();
         }
     }
 </script>
