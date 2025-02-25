@@ -364,8 +364,8 @@
       </a>
       <span class="tooltip">Dashboard</span>
     </li>
-
-
+    
+    
     <li class="dropdown">
       <a href="#" class="dropdown-btn">
         <i class='bx bxs-user'></i>
@@ -380,6 +380,22 @@
         <a href="{{route('utilisateur.attendeActivation')}}">En attende d'activation</a>
       </div>
       <span class="tooltip">Utilisateur</span>
+    </li>
+    
+    <li>
+      <a href="{{ route('banques.index') }}">
+        <i class='bx bxs-bank'></i>
+        <span class="links_name">Banques</span>
+      </a>
+      <span class="tooltip">Banques</span>
+    </li>
+    
+    <li>
+      <a href="{{ route('monnies.index') }}">
+        <i class='bx bxl-bitcoin fs-7'></i>
+        <span class="links_name">Monnies</span>
+      </a>
+      <span class="tooltip">Monnies</span>
     </li>
 
     <li class="dropdown">

@@ -8,6 +8,20 @@
 
     <div class="main">
         @include('layouts.nav')
+
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+
+
         <div class="card right-side mx-lg-3 my-lg-5">
             <div class="card-body">
 
@@ -206,67 +220,5 @@
     }
 });
 </script>
-
-{{-- <script>
-
-    const formAjouterVille = document.getElementById('formAjouterVille');
-
-    formAjouterProduit.addEventListener('submit', function (event) {
-        event.preventDefault();
-        if (dataValid()) {
-            this.submit();
-        }
-    })
-
-
-    let room = 1;
-    function education_fields() {
-        if (document.querySelectorAll('#education_fields form.row').length === 0) {
-            document.getElementById("qteProduit").setAttribute('disabled', true);
-        };
-        room++;
-        let objTo = document.getElementById("education_fields");
-        let divtest = document.createElement("div");
-        divtest.setAttribute("class", "mb-3 removeclass" + room);
-        let rdiv = "removeclass" + room;
-        divtest.innerHTML =
-            `<form class="row">
-            <div class="col-sm-4 mb-3">
-                <div class="form-group">
-                    <input type="text" class="form-control" id="nom_varainte" name="nom_varainte" placeholder="Nom varainte"></div>
-                </div>
-                <div class="col-sm-4 mb-3"> <div class="form-group">
-                    <input type="text" class="form-control" id="sku" name="SKU" placeholder="SKU">
-                </div>
-            </div>
-            <div class="col-sm-3 mb-3">
-                <div class="form-group">
-                    <input type="number" class="form-control" id="qte" name="quantite" placeholder="Quantite">
-                </div>
-            </div>
-            <div class="col-sm-1">
-                <div class="form-group">
-                    <button class="btn btn-danger" type="button" onclick="remove_education_fields('${room}' );">
-                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-minus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /></svg>
-                    </button>
-                </div>
-            </div>
-            </form>`;
-
-        objTo.appendChild(divtest);
-    }
-
-    function remove_education_fields(rid) {
-        if (document.querySelectorAll('#education_fields form.row').length === 1) {
-            document.getElementById("qteProduit").removeAttribute('disabled');
-
-        }
-        const elements = document.querySelectorAll('.removeclass' + rid);
-        elements.forEach(function (element) {
-            element.remove();
-        });
-    }
-
-</script> --}}
 
 @endsection

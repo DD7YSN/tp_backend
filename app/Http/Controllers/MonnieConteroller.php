@@ -12,8 +12,12 @@ class MonnieConteroller extends Controller
      */
     public function index()
     {
-        $monnies = Monnie::all();
-        
+        try {
+            $monnies = Monnie::paginate(15);
+            return view('admins.monnies.index', compact('monnies'));
+        } catch (\Exception $e) {
+            return redirect()->route('monnies.index')->with('error', 'Error loading monnie data: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -21,7 +25,7 @@ class MonnieConteroller extends Controller
      */
     public function create()
     {
-        //
+        return view('admins.monnies.create');
     }
 
     /**
@@ -29,15 +33,16 @@ class MonnieConteroller extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'nom_monnie' => 'required|string|max:20',
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        try {
+            $monnie = Monnie::create(['nom_monnie' => $request->input('nom_monnie')]);
+            return redirect()->route('monnies.index')->with('success', "$monnie->nom_monnie monnie created successfully.");
+        } catch (\Exception $e) {
+            return redirect()->route('monnies.index')->with('error', 'Error creating monnie: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -45,7 +50,12 @@ class MonnieConteroller extends Controller
      */
     public function edit(string $id)
     {
-        //
+        try {
+            $monnie = Monnie::findOrFail($id);
+            return view('admins.monnies.edit', compact('monnie'));
+        } catch (\Exception $e) {
+            return redirect()->route('monnies.index')->with('error', 'Error finding monnie for editing: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -53,7 +63,20 @@ class MonnieConteroller extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'nom_monnie' => 'required|string|max:20',
+        ]);
+
+        try {
+            $monnie = Monnie::findOrFail($id);
+            
+            $monnie->nom_monnie = $request->input('nom_monnie');
+            $monnie->save();
+
+            return redirect()->route('monnies.index')->with('success', 'Monnie updated successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('monnies.index')->with('error', 'Error updating monnie: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -61,6 +84,14 @@ class MonnieConteroller extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $monnie = Monnie::findOrFail($id);
+
+            $monnie->delete();
+
+            return redirect()->route('monnies.index')->with('success', "$monnie->nom_monnie Monnie deleted successfully.");
+        } catch (\Exception $e) {
+            return redirect()->route('monnies.index')->with('error', 'Error deleting monnie: ' . $e->getMessage());
+        }
     }
 }

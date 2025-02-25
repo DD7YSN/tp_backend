@@ -2,40 +2,43 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Banque;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BanqueController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+   public function index()
     {
-        //
+        try {
+            $banques = Banque::paginate(15);
+            return view('admins.banques.index', compact('banques'));
+        } catch (\Exception $e) {
+            return redirect()->route('banques.index')->with('error', 'Error loading banque data: ' . $e->getMessage());
+        }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
-    }
+        try {
+            $request->validate([
+                'nom_banque' => 'required|string|max:30',
+            ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+            $nom_banque = $request->input('nom_banque');
+            $banque = Banque::create(['nom_banque' => $nom_banque]);
+
+            return redirect()->route('banques.index')->with('success', "$banque->nom_banque banque created successfully.");
+        } catch (\Exception $e) {
+            return redirect()->route('banques.create')->with('error', 'Error creating banque: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -43,7 +46,12 @@ class BanqueController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        try {
+            $banque = Banque::findOrFail($id);
+            return view('admins.banques.edit', compact('banque'));
+        } catch (\Exception $e) {
+            return redirect()->route('banques.index')->with('error', 'Banque not found: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -51,7 +59,19 @@ class BanqueController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            $request->validate([
+                'nom_banque' => 'required|string|max:30',
+            ]);
+
+            $banque = Banque::findOrFail($id);
+            $banque->nom_banque = $request->input('nom_banque');
+            $banque->save();
+
+            return redirect()->route('banques.index')->with('success', 'Banque updated successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('banques.edit', $id)->with('error', 'Error updating banque: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -59,6 +79,14 @@ class BanqueController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $banque = Banque::findOrFail($id);
+            $banque->delete();
+
+            return redirect()->route('banques.index')->with('success', "$banque->nom_banque banque deleted successfully.");
+        } catch (\Exception $e) {
+            return redirect()->route('banques.index')->with('error', 'Error deleting banque: ' . $e->getMessage());
+        }
     }
+
 }

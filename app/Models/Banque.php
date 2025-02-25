@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Banque extends Model
 {
-    public $timestamps = false;
+    protected $fillable = ["nom_banque"];
 
     public function utilisateur(){
         return $this->hasOne(Utilisateur::class, 'id');
