@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Business;
 use Carbon\Carbon;
 use App\Models\Coli;
-use App\Models\Coli_stock;
+use App\Models\Zone;
+use App\Models\Ville;
+use App\Models\Status;
 use App\Models\General;
 use App\Models\Produit;
-use App\Models\Status;
+use App\Models\Business;
 use App\Models\Varainte;
-use App\Models\Ville;
-use App\Models\Zone;
+use App\Models\Coli_stock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class ColiController extends Controller
 {
@@ -300,12 +301,14 @@ class ColiController extends Controller
 
     public function colisZone()
     {
-        $colis = Coli::whereHas('ville.zone', function ($query) {
-            $query->where('id', 5);
+        $ville = Auth::user()->local;
+        $zoneId = Ville::find($ville)->id_zone;
+        $colis = Coli::whereHas('ville.zone', function ($query) use($zoneId){
+            $query->where('id', $zoneId);
         })
         ->whereHas('bon_ramassage.bon_envoi', function($query){
             $query->where('arrivee', 1);
-        } )
+        })
         ->whereNotIn('id_status', [5, 6])
         ->with(['ville.zone', 'business', 'client', 'status'])
         ->get();

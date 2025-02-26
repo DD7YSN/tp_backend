@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             StatusesTableSeeder::class,
             VillesTableSeeder::class,
             AdminSeeder::class,
+            ModerateurSeeder::class,
+            
         ]);
 
         // User::factory(10)->create();

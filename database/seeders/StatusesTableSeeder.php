@@ -31,8 +31,8 @@ class StatusesTableSeeder extends Seeder
                 'color' => 'danger',
             ],
             [
-                'nom_status' => '',
-                'color' => '',
+                'nom_status' => 'mise en distribution',
+                'color' => 'secondary',
             ],
         ];
 
