@@ -200,6 +200,7 @@ Route::middleware(['auth', CheckLivreurMiddleware::class])->group(function () {
         return view('livreur.dashboard');
     })->name('livreur.dashboard');
     Route::get('/livreur/colis',[ColiController::class, 'colisByLivreur'])->name('livreur.index');
+    Route::post('/livreur/statusChange',[ColiController::class,'changerStatusByLivreur'])->name('livreur.changeStatus');
 });
 
 

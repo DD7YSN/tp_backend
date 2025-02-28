@@ -323,4 +323,13 @@ class ColiController extends Controller
         $statuses = Status::all();
         return view('livreur.index', compact('colis', 'statuses'));
     }
+
+    public function changerStatusByLivreur(Request $request){
+        $status = $request->input('status');
+        $commentaire = $request->input('commentaire');
+        $coliSelected = $request->input('idColi');
+        $coli = Coli::where('track_number', $coliSelected)->first();
+        $coli->id_status = $status;
+        $coli->save();
+    }
 }

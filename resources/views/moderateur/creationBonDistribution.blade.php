@@ -470,7 +470,7 @@ function showError(inputId, message) {
     function unvalidatedColis() {
     const bonDistributions = JSON.parse(localStorage.getItem('bon_distribution')) || [];
     
-    // Flatten all colis_ids into a single array
+
     const allColisIds = bonDistributions.flatMap(bon => bon.colis_ids);
     
     return allColisIds;

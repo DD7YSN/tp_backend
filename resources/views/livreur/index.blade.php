@@ -149,78 +149,7 @@
               </tr>
               </thead>
               <tbody id="colisTableBody">
-                @if ($colis->isEmpty())
-              <tr>
-                <td class="text-center" colspan="10">
-                Aucune Colis pour afficher
-                </td>
-              </tr>
-              @else
-              @foreach ($colis as $coli)
-              <tr id="{{$coli->track_number}}">
-                <td>{{$coli->track_number}}</td>
-                <td>{{$coli->created_at}}</td>
-                <td>{{$coli->telephone}}</td>
-                <td>{{$coli->client->nom_magasin ?? $coli->utilisateur->nom}}</td>
-                <td><span style="padding: 6px 15px;" class="badge bg-info-subtle text-info">
-                    {{$coli->etat ? 'Paye' : 'Non Paye' }}
-                    </span></td>
-                <td>@if ($coli->id_status)
-                    <span style="padding: 6px 15px;"
-                    class="badge bg-{{ $coli->status->color }}-subtle text-{{ $coli->status->color }}">
-                    {{ $coli->status->nom_status }}
-                    </span>
-                  @endif</td>
-                <td>{{$coli->ville->nom_ville}}</td>
-                <td>{{$coli->prix}}</td>
-                <td class="text-center">
-                    <div class="dropdown dropstart">
-                    <a href="javascript:void(0)" class="text-muted" id="dropdownMenuButton" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="icon icon-tabler icons-tabler-outline icon-tabler-dots-vertical">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
-                    <path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
-                    <path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
-                    </svg>
               
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <li>
-                    <a class="dropdown-item d-flex align-items-center gap-2" href="javascript:void(0)">
-                    <i class='bx bx-list-ul fs-7'></i>
-                    Suivi
-                    </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center gap-2" target="_blank"
-                        data-bs-toggle="modal" data-bs-target="#al-success-alert" href="#">
-                        <i class='bx bx-info-circle fs-7' style='color:#08a61f'  ></i>
-                        Informations du colis
-                        </a>
-                        </li>
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center gap-2"
-                        href="javascript:void(0)" id="changerStatus">
-                        <i class='bx bxs-pencil fs-7'></i>
-                        Changer le status
-                        </a>
-                        </li>
-                    <li>
-                    <a class="dropdown-item d-flex align-items-center gap-2" target="_blank"
-                    href="">
-                    <i class='fs-7 bx bxs-printer'></i>
-                    Ticket
-                    </a>
-                    </li>
-                    </ul>
-                    </div>
-                    </td>
-                </tr>
-                @endforeach
-                @endif
               </tbody>
             </table>
             </div>
@@ -264,7 +193,7 @@
                             <button id="annuler" type="reset" class="btn bg-danger-subtle text-danger hstack gap-6">
                                 Annuler
                             </button>
-                            <button type="submit" class="btn btn-primary hstack gap-6" id="chagerButton">
+                            <button type="submit" class="btn btn-primary hstack gap-6" id="changerButton">
                                 changer
                             </button>
                         </div>
@@ -276,72 +205,179 @@
 </div>
 </div>
 <script>
-    const annuler = document.getElementById('annuler');
-    const formChangerStatus = document.getElementById('formChangerStatus');
-    const colis = @json($colis);
-    const colisInfo = document.getElementById('colisInfo');
-    let idColisSelected;
-    document.querySelectorAll('#changerStatus').forEach(changerStatusOption => {
-    changerStatusOption.addEventListener('click', () => {
-        const formChangerStatus = document.getElementById('formChangerStatus');
+  const colisTableBody = document.getElementById('colisTableBody');
+const colis = @json($colis); // Declare colis once at the top
+
+function fillColisTable() {
+    colisTableBody.innerHTML = ''; // Clear the table body
+
+    if (colis.length === 0) {
+        colisTableBody.innerHTML = `
+            <tr>
+                <td colspan='9' class="text-center">
+                    <p>Aucune colis pour afficher</p>
+                </td>  
+            </tr>
+        `;
+    } else {
+        colis.forEach(coli => {
+            colisTableBody.innerHTML += `
+                <tr id="${coli.track_number}">
+                    <td>${coli.track_number}</td>
+                    <td>${coli.created_at}</td>
+                    <td>${coli.telephone}</td>
+                    <td>${coli.client?.nom_magasin ?? coli.utilisateur?.nom ?? 'N/A'}</td>
+                    <td>
+                        <span style="padding: 6px 15px;" class="badge bg-info-subtle text-info">
+                            ${coli.etat ? 'Paye' : 'Non Paye'}
+                        </span>
+                    </td>
+                    <td>
+                        ${coli.id_status ? `
+                            <span style="padding: 6px 15px;" class="badge bg-${coli.status.color}-subtle text-${coli.status.color}">
+                                ${coli.status.nom_status}
+                            </span>
+                        ` : ''}
+                    </td>
+                    <td>${coli.ville?.nom_ville}</td>
+                    <td>${coli.prix}</td>
+                    <td class="text-center">
+                        <div class="dropdown dropstart">
+                            <a href="javascript:void(0)" class="text-muted" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-dots-vertical">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+                                    <path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+                                    <path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+                                </svg>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center gap-2" href="javascript:void(0)">
+                                        <i class='bx bx-list-ul fs-7'></i>
+                                        Suivi
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center gap-2" target="_blank" data-bs-toggle="modal" data-bs-target="#al-success-alert" href="#">
+                                        <i class='bx bx-info-circle fs-7' style='color:#08a61f'></i>
+                                        Informations du colis
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center gap-2" href="javascript:void(0)" id="changerStatus">
+                                        <i class='bx bxs-pencil fs-7'></i>
+                                        Changer le status
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center gap-2" target="_blank" href="">
+                                        <i class='fs-7 bx bxs-printer'></i>
+                                        Ticket
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+}
+
+// Use event delegation for dynamically added elements
+document.getElementById('colisTableBody').addEventListener('click', (event) => {
+    if (event.target && event.target.id === 'changerStatus') {
+        const changerStatusOption = event.target;
         const colisInfo = document.getElementById('colisInfo');
         formChangerStatus.classList.add('showForm');
-        idColisSelected = changerStatusOption.closest('tr').id;
-        const colisSelected = colis.find(colis => colis.track_number == idColisSelected);
-        colisInfo.innerHTML = `
-        <div class=" d-flex justify-content-center ">
-        <div class="row  p-4 ">
-        <div class="col-md-6">
-            <p><strong class="text-dark">Code Suivi:</strong> ${colisSelected.track_number}</p>
-            <p><strong class="text-dark">Telephone:</strong> ${colisSelected.telephone}</p>
-            <p><strong class="text-dark">Etat:</strong> ${colisSelected.etat ? 'Paye' : 'Non Paye'}</p>
-            <p><strong class="text-dark">Ville:</strong> ${colisSelected.ville.nom_ville}</p>
-            <p><strong class="text-dark">Prix:</strong> ${colisSelected.prix}</p>
-        </div>
-        <div class="col-md-6">
-            <p><strong class="text-dark">Date d'expidition:</strong> ${colisSelected.bon_envoi ? colisSelected.bon_envoi.created_at : 'N/A'}</p>
-            <p><strong class="text-dark">Status:</strong> <span class="badge bg-${colisSelected.status.color }-subtle text-${colisSelected.status.color }">${colisSelected.id_status ? colisSelected.status.nom_status : 'N/A'}</span></p>
-        </div>
-        </div>
-    </div>
-        `;
-        
-    });
-  });
-    annuler.addEventListener('click', () => {
-      formChangerStatus.classList.remove('showForm')
-    })
-    
-    document.getElementById('colisStatus').addEventListener('change',()=>{
-      const statuses = @json($statuses);
-      const statusAcompanient = document.getElementById('statusAcompanient');
-      const statusSelected = statuses.find(statu => statu.id == status);
-      const status = document.getElementById('colisStatus').value;
+        trackNumColisSelected = changerStatusOption.closest('tr').id;
+        const colisSelected = colis.find(colis => colis.track_number == trackNumColisSelected);
 
-  });
-  const chagerButton = document.getElementById('chagerButton');
-  chagerButton.addEventListener('click', () => {
+        if (colisSelected) {
+            colisInfo.innerHTML = `
+                <div class="d-flex justify-content-center">
+                    <div class="row p-4">
+                        <div class="col-md-6">
+                            <p><strong class="text-dark">Code Suivi:</strong> ${colisSelected.track_number}</p>
+                            <p><strong class="text-dark">Telephone:</strong> ${colisSelected.telephone}</p>
+                            <p><strong class="text-dark">Etat:</strong> ${colisSelected.etat ? 'Paye' : 'Non Paye'}</p>
+                            <p><strong class="text-dark">Ville:</strong> ${colisSelected.ville.nom_ville}</p>
+                            <p><strong class="text-dark">Prix:</strong> ${colisSelected.prix}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong class="text-dark">Date d'expidition:</strong> ${colisSelected.bon_envoi ? colisSelected.bon_envoi.created_at : 'N/A'}</p>
+                            <p><strong class="text-dark">Status:</strong> <span class="badge bg-${colisSelected.status.color}-subtle text-${colisSelected.status.color}">${colisSelected.id_status ? colisSelected.status.nom_status : 'N/A'}</span></p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else {
+            console.error('Colis not found');
+        }
+    }
+});
+
+const annuler = document.getElementById('annuler');
+annuler.addEventListener('click', () => {
+    formChangerStatus.classList.remove('showForm');
+});
+
+const changerButton = document.getElementById('changerButton');
+changerButton.addEventListener('click', () => {
     const status = document.getElementById('colisStatus').value;
     const commentaire = document.getElementById('inputCommentaire').value;
     const errorMessages = document.querySelectorAll(".form-control-feedback");
-    errorMessages.forEach(msg => msg.remove()); 
-    if(status == '-1'){
-      showError('colisStatus', 'Veuillez selectionner le status');
+    errorMessages.forEach(msg => msg.remove());
+
+    let isValid = true;
+    if (status == '-1') {
+        showError('colisStatus', 'Veuillez selectionner le status');
+        isValid = false;
     }
-    if(commentaire == ''){
-      showError('inputCommentaire', 'Veuillez entrer le commentaire');
+    if (commentaire == '') {
+        showError('inputCommentaire', 'Veuillez entrer le commentaire');
+        isValid = false;
     }
 
-  });
-  function showError(inputId, message) {
-        const inputField = document.getElementById(inputId);
-        const errorSmall = document.createElement("small");
-        errorSmall.classList.add("form-control-feedback", "text-danger");
-        errorSmall.textContent = message;
-        inputField.parentElement.appendChild(errorSmall);
-    }
+    if (isValid) {
+        let data = {
+            status: status,
+            commentaire: commentaire,
+            idColi: trackNumColisSelected
+        };
 
-  
+        fetch('{{ route('livreur.changeStatus') }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            fillColisTable(); 
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+        formChangerStatus.classList.remove('showForm');
+    }
+});
+
+function showError(inputId, message) {
+    const inputField = document.getElementById(inputId);
+    const errorSmall = document.createElement("small");
+    errorSmall.classList.add("form-control-feedback", "text-danger");
+    errorSmall.textContent = message;
+    inputField.parentElement.appendChild(errorSmall);
+}
+
+window.onload = function() {
+    fillColisTable();
+};
 
 </script>
 @endsection
