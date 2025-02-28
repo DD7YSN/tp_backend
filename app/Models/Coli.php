@@ -31,4 +31,10 @@ class Coli extends Model
     public function client(){
         return $this->belongsTo(Client::class, 'id_client');
     }
+    public function bon_distribution(){
+        return $this->belongsTo(Bon_distribution::class, 'bon_distribution');
+    }
+    public function bon_envoi(){
+        return $this->belongsTo(Bon_envoi::class, 'bon_envoi');
+    }
 }

@@ -16,7 +16,6 @@ return new class extends Migration
             $table->boolean('status')->default(0)->comment('attende ramassage / recu');
             $table->date('date')->comment('date de recu');
             $table->string('ref_ramassage', 255)->unique();
-            $table->foreignId('bon_envoi')->nullable()->constrained('bon_envois');
             $table->foreignId('id_ramasseur')->nullable()->constrained('utilisateurs');
             $table->foreignId('ville_ramassage')->constrained('villes');
             $table->string('adresse_ramassage', 255)->default('');

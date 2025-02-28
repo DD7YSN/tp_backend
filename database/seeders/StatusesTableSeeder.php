@@ -23,16 +23,40 @@ class StatusesTableSeeder extends Seeder
                 'color' => '',
             ],
             [
-                'nom_status' => 'livre',
+                'nom_status' => 'livré',
                 'color' => 'success',
             ],
             [
-                'nom_status' => 'refuse',
+                'nom_status' => 'refusé',
                 'color' => 'danger',
             ],
             [
                 'nom_status' => 'mise en distribution',
                 'color' => 'secondary',
+            ],
+            [
+                'nom_status' => 'reporté',
+                'color' => 'primary', 
+            ],
+            [
+                'nom_status' => 'pas de réponse',
+                'color' => 'warning', 
+            ],
+            [
+                'nom_status' => 'annulé',
+                'color' => 'danger'
+            ],
+            [
+                'nom_status' => 'hors-zone',
+                'color' => 'dark', 
+            ],
+            [
+                'nom_status' => 'boîte vocale',
+                'color' => 'info',
+            ],
+            [
+                'nom_status' => 'en voyage',
+                'color' => 'secondary', 
             ],
         ];
 

@@ -7,22 +7,23 @@ use App\Http\Controllers\ColiController;
 use App\Http\Controllers\ZoneController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\VilleController;
+use App\Http\Controllers\BanqueController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\MonnieConteroller;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BonEnvoiController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\GeneralConteroller;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\BanqueController;
 use App\Http\Middleware\CheckAdminMiddleware;
 use App\Http\Middleware\CheckClientMiddleware;
 use App\Http\Controllers\UtilisateurController;
+use App\Http\Middleware\CheckLivreurMiddleware;
 use App\Http\Controllers\Bon_ramassageController;
 use App\Http\Middleware\CheckModerateurMiddleware;
 use App\Http\Controllers\BonDistributionController;
 use App\Http\Controllers\DashboardClientController;
-use App\Http\Controllers\MonnieConteroller;
 
 Route::middleware(['auth', CheckClientMiddleware::class])->group(function () {
     Route::prefix('client')->group(function () {
@@ -170,8 +171,14 @@ Route::middleware(['auth', CheckAdminMiddleware::class])->group(function () {
 // Start Route Mod ::::::::::::::::::::::::::::::::
 Route::middleware(['auth', CheckModerateurMiddleware::class])->group(function () {
     Route::get('/dashboard',function (){
+        return view('admins.index');
+    })->name('dashboard.admin');
+
+
+    Route::get('/dashboard',function (){
         return view('moderateur.dashboard');
     })->name('moderateur.dashboard');
+    ;
     Route::get('/moderateur/colis', [ColiController::class, 'colisZone'])->name('moderateur.colis');
     Route::get('/bonDistribution', [BonDistributionController::class, 'index'])->name('bonDistr.index');
     Route::get('/bonDistribution/create', [BonDistributionController::class, 'create'])->name('bonDistr.create');
@@ -187,6 +194,18 @@ Route::middleware(['auth', CheckModerateurMiddleware::class])->group(function ()
 
 
 // End Route Mod ::::::::::::::::::::::::::::::::
+// Start Route Livreur :::::::::::::::::::::::::
+Route::middleware(['auth', CheckLivreurMiddleware::class])->group(function () { 
+    Route::get('/dashboard',function (){
+        return view('livreur.dashboard');
+    })->name('livreur.dashboard');
+    Route::get('/livreur/colis',[ColiController::class, 'colisByLivreur'])->name('livreur.index');
+});
+
+
+
+
+
 
 
 

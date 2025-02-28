@@ -24,6 +24,7 @@ return new class extends Migration
             $table->date('date_creation')->default(now());
             $table->foreignId('bon_ramassage')->nullable()->constrained('bon_ramassages');
             $table->foreignId('bon_distribution')->nullable()->constrained('bon_distributions');
+            $table->foreignId('bon_envoi')->nullable()->constrained('bon_envois');
             $table->decimal('prix', 8, 2);
             $table->foreignId('id_client')->constrained('utilisateurs');
             $table->boolean('pret_preparation')->default(1)->comment('pret pour la preparation / nouveau coli');

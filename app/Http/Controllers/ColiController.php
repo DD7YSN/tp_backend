@@ -314,4 +314,13 @@ class ColiController extends Controller
         ->get();
         return view('moderateur.colis', compact('colis'));
     }
+    
+    public function colisByLivreur(){
+        $userId = Auth::user()->id;
+        $colis = Coli::wherehas('bon_distribution', function($query) use($userId){
+            $query->where('id_livreur', $userId);
+        })->with(['ville', 'business', 'status'])->get();
+        $statuses = Status::all();
+        return view('livreur.index', compact('colis', 'statuses'));
+    }
 }

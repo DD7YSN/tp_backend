@@ -359,7 +359,7 @@
     </div>
     <ul class="nav-list">
         <li>
-            <a href="{{route('moderateur.dashboard')}}">
+            <a href="{{route('livreur.dashboard')}}">
                 <i class="bx bx-grid-alt"></i>
                 <span class="links_name">Dashboard</span>
             </a>
@@ -368,7 +368,7 @@
         <li>{{-- Start dropdown --}}</li>
 
         <li class="dropdown">
-            <a href="{{route('moderateur.colis')}}" class="dropdown-btn">
+            <a href="{{route('livreur.index')}}" class="dropdown-btn">
                 <i class="bx bxs-package"></i>
                 <span class="links_name">Colis</span>
             </a>
@@ -381,8 +381,8 @@
                 <span class="links_name">Bon de Distribution</span>
             </a>
             <div class="dropdown-content">
-                <a href="{{route('bonDistr.index')}}">Liste Bon distribution</a>
-                <a href="{{route('bonDistr.create')}}"
+                <a href="">Liste Bon distribution</a>
+                <a href=""
                     >Ajouter Bon distribution</a
                 >
             </div>
@@ -394,8 +394,8 @@
                 <span class="links_name">Bon d'envoi</span>
             </a>
             <div class="dropdown-content">
-                <a href="{{route('bonEnvoi.index')}}">Liste Bon d'envoi</a>
-                <a href="{{route('bonEnvoi.Scan')}}">Scan Bon d'envoi</a>
+                <a href="">Liste Bon d'envoi</a>
+                <a href="">Scan Bon d'envoi</a>
             </div>
             <span class="tooltip">Bon d'envoi</span>
         </li>

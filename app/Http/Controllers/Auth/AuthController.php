@@ -68,6 +68,9 @@ class AuthController extends Controller
             else if ($role->nom_role === 'moderateur') {
                 return redirect()->route('moderateur.dashboard');
             }
+            else if ($role->nom_role === 'livreur') {
+                return redirect()->route('livreur.dashboard');
+            }
             else {
                 return redirect()->route('clients.index');
             }

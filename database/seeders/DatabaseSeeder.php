@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             VillesTableSeeder::class,
             AdminSeeder::class,
             ModerateurSeeder::class,
+            LivreurSeeder::class,
             
         ]);
 
