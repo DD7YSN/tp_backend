@@ -1,0 +1,55 @@
+image: php:8.2-fpm
+
+variables:
+  APP_ENV: testing
+  DB_CONNECTION: sqlite
+  DB_DATABASE: ":memory:"
+  CACHE_DRIVER: array
+  QUEUE_CONNECTION: sync
+  SESSION_DRIVER: array
+  COMPOSER_CACHE_DIR: "/cache/composer"
+
+cache:
+  paths:
+    - vendor/
+    - $COMPOSER_CACHE_DIR/
+
+services:
+  - mysql:latest
+
+stages:
+  - prepare
+  - test
+  - deploy
+
+before_script:
+  - apt-get update && apt-get install -y unzip git curl libpq-dev zip
+  - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  - cp .env.example .env
+  - composer install --prefer-dist --no-progress --no-interaction
+  - php artisan key:generate
+
+migrate:
+  stage: prepare
+  script:
+    - php artisan migrate --force
+  only:
+    - main
+
+test:
+  stage: test
+  script:
+    - vendor/bin/phpunit --testdox
+  only:
+    - merge_requests
+    - main
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploying application..."
+    - php artisan config:cache
+    - php artisan route:cache
+    - php artisan migrate --force
+  only:
+    - main
