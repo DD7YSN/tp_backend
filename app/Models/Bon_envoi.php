@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Bon_envoi extends Model
 {
-    public $timestamps = false;
     public function zoneTable(){
         return $this->belongsTo(Zone::class, 'zone');
     }

@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ville extends Model
 {
-    public $timestamps = false;
     protected $fillable = ['nom_ville', 'id_zone', 'ref', 'frais_livraison', 'frais_retour', 'frais_refus'];
     public function utilisateur(){
         return $this->hasMany(Utilisateur::class, 'id');

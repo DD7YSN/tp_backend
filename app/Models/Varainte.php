@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Varainte extends Model
 {
-    public $timestamps = false;
     protected $fillable = ['nom_varainte','SKU','quantite','id_produit','status','id_responsable'];
 
     public function produit(){
