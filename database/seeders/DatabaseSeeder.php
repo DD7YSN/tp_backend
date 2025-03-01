@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             RolesTableSeeder::class,
             StatusesTableSeeder::class,
             VillesTableSeeder::class,
+            GeneralTableSeeder::class,
             AdminSeeder::class,
             ModerateurSeeder::class,
             LivreurSeeder::class,

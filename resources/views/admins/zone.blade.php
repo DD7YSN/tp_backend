@@ -36,6 +36,20 @@
     <div class="main">
         @include('layouts.nav')
 
+            <!-- Success Message -->
+               @if(session('success'))
+                    <div style="color: green;">
+                        {{ session('success') }}
+                    </div>
+                @endif
+               <!-- error Message -->
+               @if(session('error'))
+                    <div style="color: red;">
+                        {{ session('error') }}
+                    </div>
+                @endif
+            <!-- End Message -->
+
         <div class="card right-side mx-lg-3 mt-5">
             <div class="card-body p-3">
                 <div class="d-flex justify-content-between align-items-center">

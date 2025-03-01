@@ -9,6 +9,20 @@
     <div class="main pb-5">
         @include('layouts.nav')
 
+            <!-- Success Message -->
+               @if(session('success'))
+                    <div style="color: green;">
+                        {{ session('success') }}
+                    </div>
+                @endif
+               <!-- error Message -->
+               @if(session('error'))
+                    <div style="color: red;">
+                        {{ session('error') }}
+                    </div>
+                @endif
+            <!-- End Message -->
+
         <div class="card right-side mx-lg-3 mt-5 p-3">
 
             <form id="formAjouterZone" action="{{ route('zones.update', $zone->id) }}" method="POST">

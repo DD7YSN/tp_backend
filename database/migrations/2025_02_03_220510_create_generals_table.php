@@ -19,9 +19,9 @@ return new class extends Migration
             $table->string('telephone_b', 15)->nullable();
             $table->string('fix', 15)->nullable();
             $table->string('email', 40);
-            $table->string('site_lien', 255);
-            $table->string('lien_admin', 255);
-            $table->string('lien_client', 255);
+            $table->string('site_lien', 255)->nullable();
+            $table->string('lien_admin', 255)->nullable();
+            $table->string('lien_client', 255)->nullable();
             $table->foreignId('zone_principal')->constrained('zones');
             $table->string('adresse', 255);
             $table->timestamps();

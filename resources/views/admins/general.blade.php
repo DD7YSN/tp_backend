@@ -8,105 +8,115 @@
 
     <div class="main pd-5">
     @include('layouts.nav')
-
+                   <!-- Success Message -->
+               @if(session('success'))
+                    <div style="color: green;">
+                        {{ session('success') }}
+                    </div>
+                @endif
+               <!-- error Message -->
+               @if(session('error'))
+                    <div style="color: red;">
+                        {{ session('error') }}
+                    </div>
+                @endif
+            <!-- End Message -->
         <div class="card mx-lg-3 mt-5">
             <div class="card-body">
               <h4 class="card-title mb-3">Information General</h4>
-              <form id="globalForm" action="{{route('general.update', $general->id)}}" method="POST">
-                @method('PUT')
-                @csrf
-                <div class="form-body">
-                    <h3>Informations</h3>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="form-label">Nom de l'entreprise </label>
-                            <div class="mb-3">
-                                <input type="text" id="nom" name="nom" class="form-control" placeholder="Nom de l'entreprise">
+           
+              <form id="globalForm" action="{{ route('general.update', $general->id) }}" method="POST">
+                    @method('PUT')
+                    @csrf
+                    <div class="form-body">
+                        <h3>Informations</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Nom de l'entreprise</label>
+                                <div class="mb-3">
+                                    <input type="text" id="nom" name="nom" class="form-control" placeholder="Nom de l'entreprise" value="{{ $general->nom }}">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Web site </label>
-                            <div class="mb-3">
-                                <input type="text" id="site_lien" name="site_lien" class="form-control" placeholder="Web site">
+                            <div class="col-md-6">
+                                <label class="form-label">Web site</label>
+                                <div class="mb-3">
+                                    <input type="text" id="site_lien" name="site_lien" class="form-control" placeholder="Web site" value="{{ $general->site_lien }}">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Telephone de l'entreprise </label>
-                            <div class="mb-3">
-                                <input type="text" id="telephone_a" name="telephone_a" class="form-control" placeholder="Telephone de l'entreprise">
+                            <div class="col-md-6">
+                                <label class="form-label">Telephone de l'entreprise</label>
+                                <div class="mb-3">
+                                    <input type="text" id="telephone_a" name="telephone_a" class="form-control" placeholder="Telephone de l'entreprise" value="{{ $general->telephone_a }}">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Telephone de l'entreprise 2</label>
-                            <div class="mb-3">
-                                <input type="text" id="telephone_b" name="telephone_b" class="form-control" placeholder="Telephone de l'entreprise 2">
+                            <div class="col-md-6">
+                                <label class="form-label">Telephone de l'entreprise 2</label>
+                                <div class="mb-3">
+                                    <input type="text" id="telephone_b" name="telephone_b" class="form-control" placeholder="Telephone de l'entreprise 2" value="{{ $general->telephone_b }}">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Fix de l'entreprise</label>
-                            <div class="mb-3">
-                                <input type="text" id="fix" name="fix" class="form-control" placeholder="fix de l'entreprise">
+                            <div class="col-md-6">
+                                <label class="form-label">Fix de l'entreprise</label>
+                                <div class="mb-3">
+                                    <input type="text" id="fix" name="fix" class="form-control" placeholder="Fix de l'entreprise" value="{{ $general->fix }}">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Email de l'entreprise</label>
-                            <div class="mb-3">
-                                <input type="text" id="email" name="email" class="form-control" placeholder="Email de l'entreprise">
+                            <div class="col-md-6">
+                                <label class="form-label">Email de l'entreprise</label>
+                                <div class="mb-3">
+                                    <input type="text" id="email" name="email" class="form-control" placeholder="Email de l'entreprise" value="{{ $general->email }}">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Monnie de l'application</label>
-                            <div class="mb-3">
-                                <select id="id_monnie" class="form-select" name="id_monnaie">
-                                    <option selected="">Choisissez monnaie de l'application ...</option>
-                                    @foreach ($monnies as $m)
-                                    <option value="{{ $m->id }}" @if($m->id == $general->id_monnie) selected @endif> {{ $m->nom_monnie }} </option>
-                                    @endforeach
-                                </select>
+                            <div class="col-md-6">
+                                <label class="form-label">Monnie de l'application</label>
+                                <div class="mb-3">
+                                    <select id="id_monnie" class="form-select" name="id_monnie">
+                                        <option value="">Choisissez monnaie de l'application ...</option>
+                                        @foreach ($monnies as $m)
+                                            <option value="{{ $m->id }}" @if($m->id == $general->id_monnie) selected @endif>{{ $m->nom_monnie }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Lien administrateur</label>
-                            <div class="mb-3">
-                                <input type="text" id="site_admin" name="site_admin" class="form-control" placeholder="Lien administrateur">
+                            <div class="col-md-6">
+                                <label class="form-label">Lien administrateur</label>
+                                <div class="mb-3">
+                                    <input type="text" id="site_admin" name="lien_admin" class="form-control" placeholder="Lien administrateur" value="{{ $general->lien_admin }}">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Lien clients</label>
-                            <div class="mb-3">
-                                <input type="text" id="site_client" name="site_client" class="form-control" placeholder="Lien administrateur">
+                            <div class="col-md-6">
+                                <label class="form-label">Lien clients</label>
+                                <div class="mb-3">
+                                    <input type="text" id="site_client" name="lien_client" class="form-control" placeholder="Lien clients" value="{{ $general->lien_client }}">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Zone Principal</label>
-                            <div class="mb-3">
-                                <select id="zone_principal" class="form-select" name="id_monnaie">
-                                    <option selected="">Choisissez monnaie de l'application ...</option>
-                                    @foreach ($zones as $z)
-                                    <option value="{{ $z->id }}" @if($z->id == $general->zone_principal) selected @endif> {{ $z->nom_zone }} </option>
-                                    @endforeach
-                                </select>
+                            <div class="col-md-6">
+                                <label class="form-label">Zone Principal</label>
+                                <div class="mb-3">
+                                    <select id="zone_principal" class="form-select" name="zone_principal">
+                                        <option value="">Choisissez la zone principale ...</option>
+                                        @foreach ($zones as $z)
+                                            <option value="{{ $z->id }}" @if($z->id == $general->zone_principal) selected @endif>{{ $z->nom_zone }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                                                <div class="col-md-6">
-                            <label class="form-label">Adresse de l'enterprise </label>
-                            <div class="mb-3">
-                                <input type="text" id="adresse" name="adresse" class="form-control" placeholder="adresse">
+                            <div class="col-md-6">
+                                <label class="form-label">Adresse de l'entreprise</label>
+                                <div class="mb-3">
+                                    <input type="text" id="adresse" name="adresse" class="form-control" placeholder="Adresse de l'entreprise" value="{{ $general->adresse }}">
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-actions d-md-flex align-items-center">
-                  <div class="d-flex ms-auto gap-6">
-                        <button type="reset" class="btn bg-danger-subtle text-danger ">
-                          Reset
-                        </button>
-                        <button type="submit" class="btn btn-success  me-6">
-                            Modifier
-                        </button>
-                  </div>
-                </div>
-              </form>
+                    <div class="form-actions d-md-flex align-items-center">
+                        <div class="d-flex ms-auto gap-6">
+                            <button type="reset" class="btn bg-danger-subtle text-danger">Reset</button>
+                            <button type="submit" class="btn btn-success me-6">Modifier</button>
+                        </div>
+                    </div>
+                </form>
+
             </div>
           </div>
     </div>
@@ -191,7 +201,6 @@
             adresse.classList.add('is-invalid');
             is_valid = false;
         }
-        console.log(idMonnie)
         return is_valid;
     };
 

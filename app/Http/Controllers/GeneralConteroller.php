@@ -67,21 +67,17 @@ class GeneralConteroller extends Controller
                 'telephone_b' => 'nullable|string|max:15',
                 'fix' => 'nullable|string|max:20',
                 'email' => 'required|email|max:40',
-                'site_lien' => 'required|url|max:255',
-                'lien_admin' => 'required|url|max:255',
-                'lien_client' => 'required|url|max:255',
+                'site_lien' => 'nullable|url|max:255',
+                'lien_admin' => 'nullable|url|max:255',
+                'lien_client' => 'nullable|url|max:255',
                 'zone_principal' => 'required|exists:zones,id',
                 'adresse' => 'required|string|max:255',
             ]);
             $general = General::find($id);
             $general->update($request->all());
-            dd($general);
-            return redirect()->route('general.index');
+            return redirect()->route('general.index')->with('success', 'Informations mises à jour avec succès.');
         }catch(Exception $err){
-            return response()->json([
-            'error' => 'Failed to update General',
-            'message' => $err->getMessage(),
-            ], 500);
+            return redirect()->route('general.index')->with('error', 'Échec de la mise à jour des informations: ' . $err->getMessage());
         }
     }
 

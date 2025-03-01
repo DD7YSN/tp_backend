@@ -15,7 +15,7 @@ class VilleController extends Controller
      */
     public function index()
     {
-        $id_user = 4;
+        $id_user = session('user')->id;
         $utilisateur = Utilisateur::find($id_user);
         $zones = Zone::all();
         $villes = Ville::with('zone')->orderBy('nom_ville')->paginate(2);
@@ -45,12 +45,9 @@ class VilleController extends Controller
                 'frais_refus' => 'required|numeric|min:0',
             ]);
             Ville::create($request->all());
-            return redirect()->route('villes.index',['message' => 'Ville successfully created!'], 201);
+           return redirect()->route('villes.index')->with('success', 'Ville créée avec succès.');
         }catch(Exception $err){
-            return response()->json([
-            'error' => 'Failed to create Ville',
-            'message' => $err->getMessage(),
-            ], 500);
+            return redirect()->route('villes.index')->with('error', 'Échec de la création de la ville: ' . $err->getMessage());
         }
     }
     
@@ -68,7 +65,7 @@ class VilleController extends Controller
      */
     public function edit(string $id)
     {
-        $id_user = 4;
+        $id_user = session('user')->id;
         $utilisateur = Utilisateur::find($id_user);
         $zones = Zone::all();
         $ville = Ville::find($id);
@@ -91,12 +88,9 @@ class VilleController extends Controller
             ]);
             $ville = Ville::find($id);
             $ville->update($request->all());
-            return redirect()->route('villes.index');
+            return redirect()->route('villes.index')->with('success', 'Ville mise à jour avec succès.');
         }catch(Exception $err){
-            return response()->json([
-            'error' => 'Failed to update Ville',
-            'message' => $err->getMessage(),
-            ], 500);
+            return redirect()->route('villes.index')->with('error', 'Échec de la mise à jour de la ville: ' . $err->getMessage());
         }
     }
 
@@ -105,7 +99,12 @@ class VilleController extends Controller
      */
     public function destroy(string $id)
     {
-        Ville::destroy($id);
-        return redirect()->route('villes.index');
+        try {
+            Ville::destroy($id);
+            return redirect()->route('villes.index')->with('success', 'Ville supprimée avec succès.');
+        } catch (Exception $err) {
+            return redirect()->route('villes.index')->with('error', 'Échec de la suppression de la ville: ' . $err->getMessage());
+        }
+    
     }
 }
