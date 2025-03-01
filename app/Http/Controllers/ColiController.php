@@ -315,6 +315,8 @@ class ColiController extends Controller
         return view('moderateur.colis', compact('colis'));
     }
     
+
+    // Function By livruer :::::::::::::::::::::::::
     public function colisByLivreur(){
         $userId = Auth::user()->id;
         $colis = Coli::wherehas('bon_distribution', function($query) use($userId){
@@ -324,12 +326,26 @@ class ColiController extends Controller
         return view('livreur.index', compact('colis', 'statuses'));
     }
 
+
     public function changerStatusByLivreur(Request $request){
-        $status = $request->input('status');
+        $statusId = $request->input('status');
         $commentaire = $request->input('commentaire');
         $coliSelected = $request->input('idColi');
         $coli = Coli::where('track_number', $coliSelected)->first();
-        $coli->id_status = $status;
-        $coli->save();
+        if($coli){
+            $coli->id_status = $statusId;
+            $coli->save();
+            $status = Status::find($request->status);
+            return response()->json([
+                'success' => true,
+                'message' => 'Status updated successfully!',
+                'id_status' => $coli->id_status,
+                'status' => $status
+            ]);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Colis not found.',
+        ], 404);
     }
 }

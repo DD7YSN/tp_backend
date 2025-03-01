@@ -4,7 +4,7 @@
 
 @section('content')
 <style>
-  #formChangerStatus {
+  #formChangerStatus, #afficherInfos {
         width: 55%;
         padding: 32px 48px;
         box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -154,7 +154,7 @@
             </table>
             </div>
           </div>
-
+          {{-- Option changer le status d'une coli --}}
           <div id="formChangerStatus">
             <h4 class="card-title mb-3">Changer Status du colis</h4>
             <hr class="line">
@@ -200,17 +200,36 @@
                     </div>
                 </div>
             </div>
-          </div>          
+          </div>        
+          
+          {{-- option afficher Onformations d'une colis  --}}
+          <div id="afficherInfos">
+            <h4 class="card-title mb-3">Informations Colis</h4>
+            <hr class="line">
+            <div class="row" id="colisShowInfo">
+              
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-md-flex align-items-center">
+                        <div class="d-flex gap-6 ms-auto mt-3 mt-md-0">
+                            <button id="annuler" type="reset" class="btn bg-danger-subtle text-danger hstack gap-6">
+                                D'accord
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
         
 </div>
 </div>
 <script>
   const colisTableBody = document.getElementById('colisTableBody');
-const colis = @json($colis); // Declare colis once at the top
+  let colis = @json($colis); 
 
 function fillColisTable() {
-    colisTableBody.innerHTML = ''; // Clear the table body
-
+    colisTableBody.innerHTML = ''; 
     if (colis.length === 0) {
         colisTableBody.innerHTML = `
             <tr>
@@ -259,8 +278,8 @@ function fillColisTable() {
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item d-flex align-items-center gap-2" target="_blank" data-bs-toggle="modal" data-bs-target="#al-success-alert" href="#">
-                                        <i class='bx bx-info-circle fs-7' style='color:#08a61f'></i>
+                                    <a class="dropdown-item d-flex align-items-center gap-2"  href="javascript:void(0)">
+                                        <i class='bx bx-info-circle fs-7' style='color:#08a61f' id="infosDuColi" ></i>
                                         Informations du colis
                                     </a>
                                 </li>
@@ -335,11 +354,6 @@ changerButton.addEventListener('click', () => {
         showError('colisStatus', 'Veuillez selectionner le status');
         isValid = false;
     }
-    if (commentaire == '') {
-        showError('inputCommentaire', 'Veuillez entrer le commentaire');
-        isValid = false;
-    }
-
     if (isValid) {
         let data = {
             status: status,
@@ -358,7 +372,18 @@ changerButton.addEventListener('click', () => {
         .then(response => response.json())
         .then(data => {
             console.log('Success:', data);
-            fillColisTable(); 
+            const updatedColis = colis.map(coli => {
+        if (coli.track_number === trackNumColisSelected) {
+            return {
+                ...coli,
+                id_status: data.id_status,
+                status: data.status
+            };
+        }
+        return coli;
+    });
+          colis = updatedColis;
+          fillColisTable(); 
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -367,6 +392,47 @@ changerButton.addEventListener('click', () => {
     }
 });
 
+
+  // show infos du colis
+  document.getElementById('colisTableBody').addEventListener('click', (event) => {
+    if (event.target && event.target.id === 'infosDuColi') {
+      const showInfosColis = event.target;
+      const colisShowInfo = document.getElementById('colisShowInfo');
+      trackNumColisSelected = changerStatusOption.closest('tr').id;
+      afficherInfos.classList.add('showForm');
+      const colisSelected = colis.find(colis => colis.track_number == trackNumColisSelected);
+      if(colisSelected){
+        colisSelected.innerHTML = 
+        `
+                <div class="d-flex justify-content-center">
+                    <div class="row p-4">
+                        <div class="col-md-6">
+                            <p><strong class="text-dark">Code Suivi:</strong> ${colisSelected.track_number}</p>
+                            <p><strong class="text-dark">Telephone:</strong> ${colisSelected.telephone}</p>
+                            <p><strong class="text-dark">Etat:</strong> ${colisSelected.etat ? 'Paye' : 'Non Paye'}</p>
+                            <p><strong class="text-dark">Ville:</strong> ${colisSelected.ville.nom_ville}</p>
+                            <p><strong class="text-dark">Prix:</strong> ${colisSelected.prix}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong class="text-dark">Date d'expidition:</strong> ${colisSelected.bon_envoi ? colisSelected.bon_envoi.created_at : 'N/A'}</p>
+                            <p><strong class="text-dark">Status:</strong> <span class="badge bg-${colisSelected.status.color}-subtle text-${colisSelected.status.color}">${colisSelected.id_status ? colisSelected.status.nom_status : 'N/A'}</span></p>
+                        </div>
+                    </div>
+                </div>
+            `;
+      }
+    };
+  })
+
+
+
+
+
+
+
+
+
+  // handle errors 
 function showError(inputId, message) {
     const inputField = document.getElementById(inputId);
     const errorSmall = document.createElement("small");

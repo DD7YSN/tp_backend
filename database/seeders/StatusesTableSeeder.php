@@ -60,7 +60,6 @@ class StatusesTableSeeder extends Seeder
             ],
         ];
 
-        // Insert statuses into the database
         foreach ($statuses as $status) {
             Status::create($status);
         }
